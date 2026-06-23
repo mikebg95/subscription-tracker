@@ -3,7 +3,7 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
         user = person "User" "An individual who tracks their recurring software costs and monitors upcoming renewal dates."
         
         subscriptionTracker = softwareSystem "Subscription Tracker" "Centralizes software subscription data, calculates monthly spending, and tracks renewal metrics." {
-            frontend = container "Frontend Web Application" "Provides the user interface for viewing, editing, and managing personal software subscriptions." "Vue.js"
+            frontend = container "Frontend Web Application" "Provides the user interface for viewing, editing, and managing personal software subscriptions." "Angular"
             backend = container "Backend API" "Handles subscription CRUD operations, financial calculations, and exposes a RESTful API." "Java and Spring Boot" {
                 controller = component "Subscription Controller" "Handles HTTP requests."
                 service = component "Calculation Service" "Calculates metrics."
