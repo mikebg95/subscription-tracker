@@ -1,0 +1,15 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table subscriptions {
+  id integer [primary key, increment]
+  name varchar [not null]
+  price numeric(10,2) [not null]
+}
+
+Records subscriptions(id, name, price) {
+  0, 'Netflix', 9.99
+  1, 'HBO Max', 5.99
+  2, 'Claude', 17.00
+  3, 'Udemy', 32.00
+}
