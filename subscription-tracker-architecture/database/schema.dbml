@@ -1,7 +1,7 @@
 // Copy & paste into dbdiagram.io to view or edit the diagram
 
 Table subscriptions {
-  id integer [primary key, increment]
+  id bigint [primary key, increment]
   name varchar(100) [unique, not null]
   price numeric(10,2) [not null]
 }
