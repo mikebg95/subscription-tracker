@@ -2,7 +2,7 @@
 
 Table subscriptions {
   id integer [primary key, increment]
-  name varchar [unique, not null]
+  name varchar(100) [unique, not null]
   price numeric(10,2) [not null]
 }
 
