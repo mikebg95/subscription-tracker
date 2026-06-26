@@ -16,17 +16,20 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.contains;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,6 +48,7 @@ class SubscriptionControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
     @MockitoBean
     SubscriptionService subscriptionService;
 
@@ -106,6 +110,40 @@ class SubscriptionControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
 
         verifyNoInteractions(subscriptionService);
+    }
+
+    @Test
+    void getSubscriptions_whenSubscriptionsRequested_shouldReturn200WithListOfSubscriptions() throws Exception {
+        // Arrange
+        when(subscriptionService.getSubscriptions()).thenReturn(
+                List.of(
+                        new SubscriptionResponse(1L, "Netflix", new BigDecimal("11.99")),
+                        new SubscriptionResponse(2L, "Disney Plus", new BigDecimal("8.99")),
+                        new SubscriptionResponse(3L, "Amazon Prime", new BigDecimal("3.99"))
+                )
+        );
+
+        // Act & Assert
+        mockMvc.perform(getSubscriptions())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[*].id", contains(1, 2, 3)))
+                .andExpect(jsonPath("$[*].name", contains("Netflix", "Disney Plus", "Amazon Prime")))
+                .andExpect(jsonPath("$[*].price", contains(11.99, 8.99, 3.99)));
+    }
+
+    @Test
+    void getSubscriptions_whenNoSubscriptions_shouldReturn200WithEmptyList() throws Exception {
+        // Arrange
+        when(subscriptionService.getSubscriptions()).thenReturn(List.of());
+
+        // Act & Assert
+        mockMvc.perform(getSubscriptions())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(0));
     }
 
     private static Stream<Arguments> invalidSubscriptionProvider() {
@@ -175,6 +213,12 @@ class SubscriptionControllerTest {
 
     private MockHttpServletRequestBuilder postSubscription() {
         return post("/subscriptions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+    }
+
+    private MockHttpServletRequestBuilder getSubscriptions() {
+        return get("/subscriptions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
     }

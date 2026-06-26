@@ -14,9 +14,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -74,5 +76,40 @@ class SubscriptionServiceTest {
         // Act & Assert
         assertThatThrownBy(() -> subscriptionService.createSubscription(subscriptionRequest))
                 .isInstanceOf(SubscriptionAlreadyExistsException.class);
+    }
+
+    @Test
+    void getSubscriptions_whenListOfSubscriptionsFetched_shouldReturnMappedSubscriptionResponses() {
+        // Arrange
+        List<Subscription> fetchedSubscriptions = List.of(
+                new Subscription(1L, "Netflix", new BigDecimal("11.99")),
+                new Subscription(2L, "Disney Plus", new BigDecimal("8.99")),
+                new Subscription(3L, "Amazon Prime", new BigDecimal("3.99"))
+        );
+        when(subscriptionDao.findAll()).thenReturn(fetchedSubscriptions);
+
+        // Act
+        List<SubscriptionResponse> subscriptionResponses = subscriptionService.getSubscriptions();
+
+        // Assert
+        assertThat(subscriptionResponses)
+                .extracting(SubscriptionResponse::id, SubscriptionResponse::name, SubscriptionResponse::price)
+                .containsExactly(
+                        tuple(1L, "Netflix", new BigDecimal("11.99")),
+                        tuple(2L, "Disney Plus", new BigDecimal("8.99")),
+                        tuple(3L, "Amazon Prime", new BigDecimal("3.99"))
+                );
+    }
+
+    @Test
+    void getSubscriptions_whenEmptyListFetched_shouldReturnEmptyList() {
+        // Arrange
+        when(subscriptionDao.findAll()).thenReturn(List.of());
+
+        // Act
+        List<SubscriptionResponse> subscriptionResponses = subscriptionService.getSubscriptions();
+
+        // Assert
+        assertThat(subscriptionResponses).isEmpty();
     }
 }

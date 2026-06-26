@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class SubscriptionService {
@@ -23,5 +25,14 @@ public class SubscriptionService {
         } catch (DuplicateKeyException e) {
             throw new SubscriptionAlreadyExistsException("A subscription with that name already exists.", e);
         }
+    }
+
+    public List<SubscriptionResponse> getSubscriptions() {
+        List<Subscription> fetchedSubscriptions = subscriptionDao.findAll();
+
+        return fetchedSubscriptions
+                .stream()
+                .map(SubscriptionResponse::fromEntity)
+                .toList();
     }
 }

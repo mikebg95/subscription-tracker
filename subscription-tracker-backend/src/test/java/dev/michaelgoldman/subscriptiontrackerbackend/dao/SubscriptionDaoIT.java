@@ -8,20 +8,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@Import(TestcontainersConfiguration.class)
 @Transactional
+@Import(TestcontainersConfiguration.class)
 class SubscriptionDaoIT {
 
     @Autowired
     SubscriptionDao subscriptionDao;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Test
     void saveSubscription_whenProvidedValidSubscriptionDetails_shouldReturnSavedSubscriptionObject() {
@@ -119,5 +124,37 @@ class SubscriptionDaoIT {
         assertThat(savedSubscription.getId()).isNotNull();
         assertThat(savedSubscription.getName()).isEqualTo(dangerousSubscription.getName());
         assertThat(savedSubscription.getPrice()).isEqualByComparingTo(dangerousSubscription.getPrice());
+    }
+
+    @Test
+    void findAllSubscriptions_whenSubscriptionsAvailable_shouldReturnListOfSubscriptionsOrderedById() {
+        // Arrange
+        Subscription sample1 = new Subscription("Netflix", new BigDecimal("11.99"));
+        Subscription sample2 = new Subscription("Disney Plus", new BigDecimal("8.99"));
+        Subscription sample3 = new Subscription("Amazon Prime", new BigDecimal("3.99"));
+
+        String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?)";
+
+        jdbcTemplate.update(sql, sample1.getName(), sample1.getPrice());
+        jdbcTemplate.update(sql, sample2.getName(), sample2.getPrice());
+        jdbcTemplate.update(sql, sample3.getName(), sample3.getPrice());
+
+        // Act
+        List<Subscription> fetchedSubscriptions = subscriptionDao.findAll();
+
+        // Assert
+        assertThat(fetchedSubscriptions).hasSize(3);
+        assertThat(fetchedSubscriptions)
+                .extracting(Subscription::getName)
+                .containsExactly("Netflix", "Disney Plus", "Amazon Prime");
+    }
+
+    @Test
+    void findAllSubscriptions_whenNoSubscriptions_shouldReturnEmptyList() {
+        // Act
+        List<Subscription> fetchedSubscriptions = subscriptionDao.findAll();
+
+        // Assert
+        assertThat(fetchedSubscriptions).isEmpty();
     }
 }

@@ -5,6 +5,7 @@ import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.service.SubscriptionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/subscriptions")
@@ -36,5 +38,10 @@ public class SubscriptionController {
         return ResponseEntity
                 .created(locationURI)
                 .body(subscriptionResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SubscriptionResponse>> getSubscriptions() {
+        return ResponseEntity.ok(subscriptionService.getSubscriptions());
     }
 }

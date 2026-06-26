@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class SubscriptionDaoImpl implements SubscriptionDao {
 
@@ -24,5 +26,11 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
     public Subscription save(Subscription subscription) {
         String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id, name, price";
         return jdbcTemplate.queryForObject(sql, rowMapper, subscription.getName(), subscription.getPrice());
+    }
+
+    @Override
+    public List<Subscription> findAll() {
+        String sql = "SELECT id, name, price FROM subscriptions ORDER BY id";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }
