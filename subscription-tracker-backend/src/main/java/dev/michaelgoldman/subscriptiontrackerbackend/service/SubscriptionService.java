@@ -32,6 +32,13 @@ public class SubscriptionService {
     public SubscriptionResponse getSubscriptionById(Long id) {
         return subscriptionDao.findById(id)
                 .map(SubscriptionResponse::fromEntity)
-                .orElseThrow(() -> new SubscriptionNotFoundException("No subscription found with id " + id));
+                .orElseThrow(() -> new SubscriptionNotFoundException(id));
+    }
+
+    public void deleteSubscriptionById(Long id) {
+        int rowsDeleted = subscriptionDao.deleteById(id);
+        if (rowsDeleted == 0) {
+            throw new SubscriptionNotFoundException(id);
+        }
     }
 }

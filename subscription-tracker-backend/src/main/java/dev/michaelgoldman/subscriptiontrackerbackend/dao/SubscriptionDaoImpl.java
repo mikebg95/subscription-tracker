@@ -47,4 +47,10 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         String sql = "SELECT id, name, price FROM subscriptions WHERE id = ?";
         return jdbcTemplate.query(sql, rowMapper, id).stream().findFirst();
     }
+
+    @Override
+    public int deleteById(Long id) {
+        String sql = "DELETE FROM subscriptions WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }

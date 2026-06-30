@@ -30,7 +30,7 @@ class SubscriptionDaoIT {
     JdbcTemplate jdbcTemplate;
 
     @Test
-    void saveSubscription_whenProvidedValidSubscriptionDetails_shouldReturnSavedSubscription() {
+    void saveSubscription_whenValidSubscriptionDetailsProvided_shouldReturnSavedSubscription() {
         // Arrange
         Subscription newSubscription = new Subscription("Netflix", new BigDecimal("8.99"));
 
@@ -45,7 +45,7 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void saveSubscription_whenProvidedDuplicateSubscriptionName_shouldThrowSubscriptionAlreadyExistsException() {
+    void saveSubscription_whenDuplicateSubscriptionNameProvided_shouldThrowSubscriptionAlreadyExistsException() {
         // Arrange
         Subscription firstSubscription = new Subscription("HBO Max", new BigDecimal("5.99"));
         Subscription duplicateSubscription =  new Subscription("HBO Max", new BigDecimal("13.99"));
@@ -57,7 +57,7 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void saveSubscription_whenProvidedDuplicateSubscriptionNameDifferentCases_shouldThrowSubscriptionAlreadyExistsException() {
+    void saveSubscription_whenDuplicateSubscriptionNameDifferentCasesProvided_shouldThrowSubscriptionAlreadyExistsException() {
         // Arrange
         Subscription firstSubscription = new Subscription("HBO Max", new BigDecimal("5.99"));
         Subscription duplicateSubscription =  new Subscription("Hbo max", new BigDecimal("13.99"));
@@ -69,7 +69,7 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void saveSubscription_whenNameInputExceedsLimit_shouldThrowDataIntegrityViolationException() {
+    void saveSubscription_whenNameExceedsLimit_shouldThrowDataIntegrityViolationException() {
         // Arrange
         String nameTooLong = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
         Subscription nameTooLongSubscription = new Subscription(nameTooLong, new BigDecimal("22.99"));
@@ -80,7 +80,7 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void saveSubscription_whenPriceInputExceedsLimit_shouldThrowDataIntegrityViolationException() {
+    void saveSubscription_whenPriceExceedsLimit_shouldThrowDataIntegrityViolationException() {
         // Arrange
         BigDecimal priceTooBig = new BigDecimal("123456789.99");
         Subscription priceTooBigSubscription = new Subscription("Claude", priceTooBig);
@@ -128,7 +128,7 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void findAllSubscriptions_whenSubscriptionsAvailable_shouldReturnListOfSubscriptionsOrderedById() {
+    void findAllSubscriptions_whenSubscriptionsExist_shouldReturnListOfSubscriptionsOrderedById() {
         // Arrange
         Subscription sample1 = new Subscription("Netflix", new BigDecimal("11.99"));
         Subscription sample2 = new Subscription("Disney Plus", new BigDecimal("8.99"));
@@ -151,7 +151,7 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void findAllSubscriptions_whenNoSubscriptions_shouldReturnEmptyList() {
+    void findAllSubscriptions_whenNoSubscriptionsExist_shouldReturnEmptyList() {
         // Act
         List<Subscription> fetchedSubscriptions = subscriptionDao.findAll();
 
@@ -160,7 +160,7 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void findSubscriptionById_whenValidIdProvided_shouldReturnCorrectSubscription() {
+    void findSubscriptionById_whenExistingIdProvided_shouldReturnCorrectSubscription() {
         // Arrange
         String sqlWithoutReturning = "INSERT INTO subscriptions (name, price) VALUES (?, ?)";
         String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id";
@@ -179,11 +179,39 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void findSubscriptionById_whenSubscriptionDoesntExist_shouldReturnEmptyOptional() {
+    void findSubscriptionById_whenNonExistingIdProvided_shouldReturnEmptyOptional() {
         // Act
-        Optional<Subscription> subscriptionOptional = subscriptionDao.findById(-1L);
+        Optional<Subscription> subscriptionOptional = subscriptionDao.findById(999L);
 
         // Assert
         assertThat(subscriptionOptional).isEmpty();
+    }
+
+    @Test
+    void deleteSubscriptionById_whenExistingIdProvided_shouldRemoveSubscriptionAndReturnOne() {
+        // Arrange
+        String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id";
+        Long savedId1 = jdbcTemplate.queryForObject(sql, Long.class, "Hbo Max", new BigDecimal("8.99"));
+        Long savedId2 = jdbcTemplate.queryForObject(sql, Long.class, "Netflix", new BigDecimal("8.99"));
+
+        // Act
+        int rowsDeleted = subscriptionDao.deleteById(savedId2);
+
+        // Assert
+        assertThat(rowsDeleted).isOne();
+        String sqlCountById = "SELECT COUNT(*) FROM subscriptions WHERE id = ?";
+        Long countDeleted = jdbcTemplate.queryForObject(sqlCountById, Long.class, savedId2);
+        Long countNotDeleted = jdbcTemplate.queryForObject(sqlCountById, Long.class, savedId1);
+        assertThat(countDeleted).isZero();
+        assertThat(countNotDeleted).isOne();
+    }
+
+    @Test
+    void deleteSubscriptionById_whenNonExistingIdProvided_shouldReturnZero() {
+        // Act
+        int rowsDeleted = subscriptionDao.deleteById(999L);
+
+        // Assert
+        assertThat(rowsDeleted).isZero();
     }
 }

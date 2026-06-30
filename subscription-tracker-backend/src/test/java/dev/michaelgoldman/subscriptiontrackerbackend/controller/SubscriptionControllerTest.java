@@ -27,11 +27,13 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.contains;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,7 +56,7 @@ class SubscriptionControllerTest {
     SubscriptionService subscriptionService;
 
     @Test
-    void createSubscription_whenProvidedValidDetails_shouldPassSubscriptionRequestToService() throws Exception {
+    void createSubscription_whenValidDetailsProvided_shouldPassSubscriptionRequestToService() throws Exception {
         // Arrange
         SubscriptionResponse subscriptionResponse = new SubscriptionResponse(SUBSCRIPTION_ID, SUBSCRIPTION_NAME, SUBSCRIPTION_PRICE);
         when(subscriptionService.createSubscription(any(SubscriptionRequest.class))).thenReturn(subscriptionResponse);
@@ -71,7 +73,7 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void createSubscription_whenProvidedValidDetails_shouldReturn201WithLocationAndSubscriptionResponse() throws Exception {
+    void createSubscription_whenValidDetailsProvided_shouldReturn201WithLocationAndSubscriptionResponse() throws Exception {
         // Arrange
         SubscriptionResponse subscriptionResponse = new SubscriptionResponse(SUBSCRIPTION_ID, SUBSCRIPTION_NAME, SUBSCRIPTION_PRICE);
         when(subscriptionService.createSubscription(any(SubscriptionRequest.class))).thenReturn(subscriptionResponse);
@@ -86,7 +88,7 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void createSubscription_whenThrowsSubscriptionAlreadyExistsException_shouldReturn409() throws Exception {
+    void createSubscription_whenServiceThrowsSubscriptionAlreadyExistsException_shouldReturn409() throws Exception {
         // Arrange
         when(subscriptionService.createSubscription(any(SubscriptionRequest.class))).thenThrow(SubscriptionAlreadyExistsException.class);
 
@@ -114,7 +116,7 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void getSubscriptions_whenSubscriptionsRequested_shouldReturn200WithListOfSubscriptions() throws Exception {
+    void getSubscriptions_whenSubscriptionsExist_shouldReturn200WithListOfSubscriptions() throws Exception {
         // Arrange
         when(subscriptionService.getSubscriptions()).thenReturn(
                 List.of(
@@ -135,7 +137,7 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void getSubscriptions_whenNoSubscriptions_shouldReturn200WithEmptyList() throws Exception {
+    void getSubscriptions_whenNoSubscriptionsExist_shouldReturn200WithEmptyList() throws Exception {
         // Arrange
         when(subscriptionService.getSubscriptions()).thenReturn(List.of());
 
@@ -148,7 +150,7 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void getSubscriptionById_whenExistingIdPassed_shouldReturn200WithSubscription() throws Exception {
+    void getSubscriptionById_whenExistingIdProvided_shouldReturn200WithSubscription() throws Exception {
         // Arrange
         SubscriptionResponse subscriptionResponse = new SubscriptionResponse(1L, "Netflix", new BigDecimal("11.99"));
         when(subscriptionService.getSubscriptionById(1L)).thenReturn(subscriptionResponse);
@@ -165,7 +167,7 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void getSubscriptionById_whenNonExistingIdPassed_shouldReturn404() throws Exception {
+    void getSubscriptionById_whenNonExistingIdProvided_shouldReturn404() throws Exception {
         // Arrange
         when(subscriptionService.getSubscriptionById(999L)).thenThrow(SubscriptionNotFoundException.class);
 
@@ -178,9 +180,52 @@ class SubscriptionControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "-1", "0", "abc" })
-    void getSubscriptionById_whenInvalidIdPassed_shouldReturn400(String subscriptionId) throws Exception {
+    void getSubscriptionById_whenInvalidIdProvided_shouldReturn400(String subscriptionId) throws Exception {
         // Act & Assert
         mockMvc.perform(getSubscription(subscriptionId))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("$.status").value(400));
+
+        verifyNoInteractions(subscriptionService);
+    }
+
+    @Test
+    void deleteSubscriptionById_whenExistingIdProvided_shouldReturn204() throws Exception {
+        // Act & Assert
+        mockMvc.perform(deleteSubscription("1"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteSubscriptionById_whenExistingIdProvided_shouldCallServiceMethod() throws Exception {
+        // Act
+        mockMvc.perform(deleteSubscription("1"));
+
+        // Assert
+        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+        verify(subscriptionService).deleteSubscriptionById(captor.capture());
+        Long passedId = captor.getValue();
+        assertThat(passedId).isEqualTo(1L);
+    }
+
+    @Test
+    void deleteSubscriptionById_whenNonExistingIdProvided_shouldReturn404() throws Exception {
+        // Arrange
+        doThrow(SubscriptionNotFoundException.class).when(subscriptionService).deleteSubscriptionById(999L);
+
+        // Act & Assert
+        mockMvc.perform(deleteSubscription("999"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("$.status").value(404));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "-1", "0", "abc" })
+    void deleteSubscriptionById_whenInvalidIdProvided_shouldReturn400(String subscriptionId) throws Exception {
+        // Act & Assert
+        mockMvc.perform(deleteSubscription(subscriptionId))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.status").value(400));
@@ -265,5 +310,9 @@ class SubscriptionControllerTest {
 
     private MockHttpServletRequestBuilder getSubscription(String subscriptionId) {
         return get("/subscriptions/" + subscriptionId).accept(MediaType.APPLICATION_JSON);
+    }
+
+    private MockHttpServletRequestBuilder deleteSubscription(String subscriptionId) {
+        return delete("/subscriptions/" + subscriptionId).accept(MediaType.APPLICATION_JSON);
     }
 }

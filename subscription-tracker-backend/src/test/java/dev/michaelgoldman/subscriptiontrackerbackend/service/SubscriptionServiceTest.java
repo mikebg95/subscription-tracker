@@ -34,7 +34,7 @@ class SubscriptionServiceTest {
     SubscriptionDao subscriptionDao;
 
     @Test
-    void createSubscription_whenValidSubscriptionRequestPassed_shouldPassSubscriptionToDao() {
+    void createSubscription_whenValidSubscriptionRequestProvided_shouldPassSubscriptionToDao() {
         // Arrange
         SubscriptionRequest subscriptionRequest = new SubscriptionRequest("Spotify", new BigDecimal("11.99"));
         Subscription subscription = new Subscription(1L, "Spotify", new BigDecimal("11.99"));
@@ -53,7 +53,7 @@ class SubscriptionServiceTest {
     }
 
     @Test
-    void createSubscription_whenValidSubscriptionRequestPassed_shouldReturnMappedResponse() {
+    void createSubscription_whenValidSubscriptionRequestProvided_shouldReturnMappedResponse() {
         // Arrange
         SubscriptionRequest subscriptionRequest = new SubscriptionRequest("Spotify", new BigDecimal("11.99"));
         Subscription subscription = new Subscription(1L, "Netflix", new BigDecimal("8.99"));
@@ -69,7 +69,7 @@ class SubscriptionServiceTest {
     }
 
     @Test
-    void createSubscription_whenProvidedDuplicateName_shouldThrowSubscriptionAlreadyExistsException() {
+    void createSubscription_whenDuplicateNameProvided_shouldThrowSubscriptionAlreadyExistsException() {
         // Arrange
         SubscriptionRequest subscriptionRequest = new SubscriptionRequest("Spotify", new BigDecimal("11.99"));
         when(subscriptionDao.save(any(Subscription.class))).thenThrow(SubscriptionAlreadyExistsException.class);
@@ -80,7 +80,7 @@ class SubscriptionServiceTest {
     }
 
     @Test
-    void getSubscriptions_whenListOfSubscriptionsFetched_shouldReturnMappedSubscriptionResponses() {
+    void getSubscriptions_whenSubscriptionsExist_shouldReturnMappedSubscriptionResponses() {
         // Arrange
         List<Subscription> fetchedSubscriptions = List.of(
                 new Subscription(1L, "Netflix", new BigDecimal("11.99")),
@@ -103,7 +103,7 @@ class SubscriptionServiceTest {
     }
 
     @Test
-    void getSubscriptions_whenEmptyListFetched_shouldReturnEmptyList() {
+    void getSubscriptions_whenNoSubscriptionsExist_shouldReturnEmptyList() {
         // Arrange
         when(subscriptionDao.findAll()).thenReturn(List.of());
 
@@ -115,7 +115,7 @@ class SubscriptionServiceTest {
     }
 
     @Test
-    void getSubscriptionById_whenSubscriptionFetched_shouldReturnMappedSubscriptionResponse() {
+    void getSubscriptionById_whenSubscriptionExists_shouldReturnMappedSubscriptionResponse() {
         // Arrange
         Optional<Subscription> fetchedOptional = Optional.of(new Subscription(1L, "Netflix", new BigDecimal("8.99")));
         when(subscriptionDao.findById(any(Long.class))).thenReturn(fetchedOptional);
@@ -130,12 +130,34 @@ class SubscriptionServiceTest {
     }
 
     @Test
-    void getSubscriptionById_whenEmptyOptionalFetched_shouldThrowSubscriptionNotFoundException() {
+    void getSubscriptionById_whenSubscriptionDoesNotExist_shouldThrowSubscriptionNotFoundException() {
         // Arrange
         when(subscriptionDao.findById(any(Long.class))).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThatThrownBy(() -> subscriptionService.getSubscriptionById(-1L))
+                .isInstanceOf(SubscriptionNotFoundException.class);
+    }
+
+    @Test
+    void deleteSubscriptionById_whenSubscriptionExists_shouldDeleteSubscription() {
+        // Arrange
+        when(subscriptionDao.deleteById(1L)).thenReturn(1);
+
+        // Act
+        subscriptionService.deleteSubscriptionById(1L);
+
+        // Assert
+        verify(subscriptionDao).deleteById(1L);
+    }
+
+    @Test
+    void deleteSubscriptionById_whenSubscriptionDoesNotExist_shouldThrowSubscriptionNotFoundException() {
+        // Arrange
+        when(subscriptionDao.deleteById(999L)).thenReturn(0);
+
+        // Act & Assert
+        assertThatThrownBy(() -> subscriptionService.deleteSubscriptionById(999L))
                 .isInstanceOf(SubscriptionNotFoundException.class);
     }
 }
