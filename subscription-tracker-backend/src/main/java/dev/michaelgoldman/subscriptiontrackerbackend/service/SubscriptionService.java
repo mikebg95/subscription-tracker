@@ -3,10 +3,9 @@ package dev.michaelgoldman.subscriptiontrackerbackend.service;
 import dev.michaelgoldman.subscriptiontrackerbackend.dao.SubscriptionDao;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionRequest;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
-import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionAlreadyExistsException;
+import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionNotFoundException;
 import dev.michaelgoldman.subscriptiontrackerbackend.model.Subscription;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,14 +16,8 @@ public class SubscriptionService {
     private final SubscriptionDao subscriptionDao;
 
     public SubscriptionResponse createSubscription(SubscriptionRequest subscriptionRequest) {
-        Subscription subscription = subscriptionRequest.toEntity();
-
-        try {
-            Subscription savedSubscription = subscriptionDao.save(subscription);
-            return SubscriptionResponse.fromEntity(savedSubscription);
-        } catch (DuplicateKeyException e) {
-            throw new SubscriptionAlreadyExistsException("A subscription with that name already exists.", e);
-        }
+        Subscription savedSubscription = subscriptionDao.save(subscriptionRequest.toEntity());
+        return SubscriptionResponse.fromEntity(savedSubscription);
     }
 
     public List<SubscriptionResponse> getSubscriptions() {
@@ -34,5 +27,11 @@ public class SubscriptionService {
                 .stream()
                 .map(SubscriptionResponse::fromEntity)
                 .toList();
+    }
+
+    public SubscriptionResponse getSubscriptionById(Long id) {
+        return subscriptionDao.findById(id)
+                .map(SubscriptionResponse::fromEntity)
+                .orElseThrow(() -> new SubscriptionNotFoundException("No subscription found with id " + id));
     }
 }

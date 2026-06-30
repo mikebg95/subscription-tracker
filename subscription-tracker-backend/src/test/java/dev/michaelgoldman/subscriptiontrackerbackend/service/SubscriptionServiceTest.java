@@ -4,6 +4,7 @@ import dev.michaelgoldman.subscriptiontrackerbackend.dao.SubscriptionDao;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionRequest;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionAlreadyExistsException;
+import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionNotFoundException;
 import dev.michaelgoldman.subscriptiontrackerbackend.model.Subscription;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,10 +12,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DuplicateKeyException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -71,7 +72,7 @@ class SubscriptionServiceTest {
     void createSubscription_whenProvidedDuplicateName_shouldThrowSubscriptionAlreadyExistsException() {
         // Arrange
         SubscriptionRequest subscriptionRequest = new SubscriptionRequest("Spotify", new BigDecimal("11.99"));
-        when(subscriptionDao.save(any(Subscription.class))).thenThrow(DuplicateKeyException.class);
+        when(subscriptionDao.save(any(Subscription.class))).thenThrow(SubscriptionAlreadyExistsException.class);
 
         // Act & Assert
         assertThatThrownBy(() -> subscriptionService.createSubscription(subscriptionRequest))
@@ -111,5 +112,30 @@ class SubscriptionServiceTest {
 
         // Assert
         assertThat(subscriptionResponses).isEmpty();
+    }
+
+    @Test
+    void getSubscriptionById_whenSubscriptionFetched_shouldReturnMappedSubscriptionResponse() {
+        // Arrange
+        Optional<Subscription> fetchedOptional = Optional.of(new Subscription(1L, "Netflix", new BigDecimal("8.99")));
+        when(subscriptionDao.findById(any(Long.class))).thenReturn(fetchedOptional);
+
+        // Act
+        SubscriptionResponse response = subscriptionService.getSubscriptionById(1L);
+
+        // Assert
+        assertThat(response.id()).isEqualTo(1L);
+        assertThat(response.name()).isEqualTo("Netflix");
+        assertThat(response.price()).isEqualByComparingTo(new BigDecimal("8.99"));
+    }
+
+    @Test
+    void getSubscriptionById_whenEmptyOptionalFetched_shouldThrowSubscriptionNotFoundException() {
+        // Arrange
+        when(subscriptionDao.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThatThrownBy(() -> subscriptionService.getSubscriptionById(-1L))
+                .isInstanceOf(SubscriptionNotFoundException.class);
     }
 }

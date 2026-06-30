@@ -1,11 +1,14 @@
 package dev.michaelgoldman.subscriptiontrackerbackend.dao;
 
+import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionAlreadyExistsException;
 import dev.michaelgoldman.subscriptiontrackerbackend.model.Subscription;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class SubscriptionDaoImpl implements SubscriptionDao {
@@ -25,12 +28,23 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
     @Override
     public Subscription save(Subscription subscription) {
         String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id, name, price";
-        return jdbcTemplate.queryForObject(sql, rowMapper, subscription.getName(), subscription.getPrice());
+
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, subscription.getName(), subscription.getPrice());
+        } catch (DuplicateKeyException e) {
+            throw new SubscriptionAlreadyExistsException("A subscription with that name already exists.", e);
+        }
     }
 
     @Override
     public List<Subscription> findAll() {
         String sql = "SELECT id, name, price FROM subscriptions ORDER BY id";
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    @Override
+    public Optional<Subscription> findById(Long id) {
+        String sql = "SELECT id, name, price FROM subscriptions WHERE id = ?";
+        return jdbcTemplate.query(sql, rowMapper, id).stream().findFirst();
     }
 }

@@ -4,8 +4,10 @@ import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionRequest;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.service.SubscriptionService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +45,12 @@ public class SubscriptionController {
     @GetMapping
     public ResponseEntity<List<SubscriptionResponse>> getSubscriptions() {
         return ResponseEntity.ok(subscriptionService.getSubscriptions());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SubscriptionResponse> getSubscriptionById(@PathVariable @Positive Long id) {
+        SubscriptionResponse subscriptionResponse = subscriptionService.getSubscriptionById(id);
+
+        return ResponseEntity.ok(subscriptionResponse);
     }
 }

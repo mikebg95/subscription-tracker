@@ -3,11 +3,13 @@ package dev.michaelgoldman.subscriptiontrackerbackend.controller;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionRequest;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionAlreadyExistsException;
+import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionNotFoundException;
 import dev.michaelgoldman.subscriptiontrackerbackend.service.SubscriptionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -48,7 +50,6 @@ class SubscriptionControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
     @MockitoBean
     SubscriptionService subscriptionService;
 
@@ -146,6 +147,47 @@ class SubscriptionControllerTest {
                 .andExpect(jsonPath("$.length()").value(0));
     }
 
+    @Test
+    void getSubscriptionById_whenExistingIdPassed_shouldReturn200WithSubscription() throws Exception {
+        // Arrange
+        SubscriptionResponse subscriptionResponse = new SubscriptionResponse(1L, "Netflix", new BigDecimal("11.99"));
+        when(subscriptionService.getSubscriptionById(1L)).thenReturn(subscriptionResponse);
+
+        // Act & Assert
+        mockMvc.perform(getSubscription("1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(equalTo(subscriptionResponse.id()), Long.class))
+                .andExpect(jsonPath("$.name").value(subscriptionResponse.name()))
+                .andExpect(jsonPath("$.price").value(comparesEqualTo(subscriptionResponse.price()), BigDecimal.class));
+
+        verify(subscriptionService).getSubscriptionById(1L);
+    }
+
+    @Test
+    void getSubscriptionById_whenNonExistingIdPassed_shouldReturn404() throws Exception {
+        // Arrange
+        when(subscriptionService.getSubscriptionById(999L)).thenThrow(SubscriptionNotFoundException.class);
+
+        // Act & Assert
+        mockMvc.perform(getSubscription("999"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("$.status").value(404));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "-1", "0", "abc" })
+    void getSubscriptionById_whenInvalidIdPassed_shouldReturn400(String subscriptionId) throws Exception {
+        // Act & Assert
+        mockMvc.perform(getSubscription(subscriptionId))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("$.status").value(400));
+
+        verifyNoInteractions(subscriptionService);
+    }
+
     private static Stream<Arguments> invalidSubscriptionProvider() {
         return Stream.of(
                 Arguments.of(
@@ -218,8 +260,10 @@ class SubscriptionControllerTest {
     }
 
     private MockHttpServletRequestBuilder getSubscriptions() {
-        return get("/subscriptions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
+        return get("/subscriptions").accept(MediaType.APPLICATION_JSON);
+    }
+
+    private MockHttpServletRequestBuilder getSubscription(String subscriptionId) {
+        return get("/subscriptions/" + subscriptionId).accept(MediaType.APPLICATION_JSON);
     }
 }

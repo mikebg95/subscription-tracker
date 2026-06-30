@@ -1,18 +1,19 @@
 package dev.michaelgoldman.subscriptiontrackerbackend.dao;
 
 import dev.michaelgoldman.subscriptiontrackerbackend.TestcontainersConfiguration;
+import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionAlreadyExistsException;
 import dev.michaelgoldman.subscriptiontrackerbackend.model.Subscription;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -29,7 +30,7 @@ class SubscriptionDaoIT {
     JdbcTemplate jdbcTemplate;
 
     @Test
-    void saveSubscription_whenProvidedValidSubscriptionDetails_shouldReturnSavedSubscriptionObject() {
+    void saveSubscription_whenProvidedValidSubscriptionDetails_shouldReturnSavedSubscription() {
         // Arrange
         Subscription newSubscription = new Subscription("Netflix", new BigDecimal("8.99"));
 
@@ -44,7 +45,7 @@ class SubscriptionDaoIT {
     }
 
     @Test
-    void saveSubscription_whenProvidedDuplicateSubscriptionName_shouldThrowDuplicateKeyException() {
+    void saveSubscription_whenProvidedDuplicateSubscriptionName_shouldThrowSubscriptionAlreadyExistsException() {
         // Arrange
         Subscription firstSubscription = new Subscription("HBO Max", new BigDecimal("5.99"));
         Subscription duplicateSubscription =  new Subscription("HBO Max", new BigDecimal("13.99"));
@@ -52,11 +53,11 @@ class SubscriptionDaoIT {
 
         // Act & Assert
         assertThatThrownBy(() -> subscriptionDao.save(duplicateSubscription))
-                .isInstanceOf(DuplicateKeyException.class);
+                .isInstanceOf(SubscriptionAlreadyExistsException.class);
     }
 
     @Test
-    void saveSubscription_whenProvidedDuplicateSubscriptionNameDifferentCases_shouldThrowDuplicateKeyException() {
+    void saveSubscription_whenProvidedDuplicateSubscriptionNameDifferentCases_shouldThrowSubscriptionAlreadyExistsException() {
         // Arrange
         Subscription firstSubscription = new Subscription("HBO Max", new BigDecimal("5.99"));
         Subscription duplicateSubscription =  new Subscription("Hbo max", new BigDecimal("13.99"));
@@ -64,7 +65,7 @@ class SubscriptionDaoIT {
 
         // Act & Assert
         assertThatThrownBy(() -> subscriptionDao.save(duplicateSubscription))
-                .isInstanceOf(DuplicateKeyException.class);
+                .isInstanceOf(SubscriptionAlreadyExistsException.class);
     }
 
     @Test
@@ -156,5 +157,33 @@ class SubscriptionDaoIT {
 
         // Assert
         assertThat(fetchedSubscriptions).isEmpty();
+    }
+
+    @Test
+    void findSubscriptionById_whenValidIdProvided_shouldReturnCorrectSubscription() {
+        // Arrange
+        String sqlWithoutReturning = "INSERT INTO subscriptions (name, price) VALUES (?, ?)";
+        String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id";
+        jdbcTemplate.update(sqlWithoutReturning, "Netflix", new BigDecimal("8.99"));
+        Long savedId = jdbcTemplate.queryForObject(sql, Long.class, "Hbo Max", new BigDecimal("13.99"));
+
+        // Act
+        Optional<Subscription> subscriptionOptional = subscriptionDao.findById(savedId);
+
+        // Assert
+        assertThat(subscriptionOptional).isPresent();
+        Subscription fetchedSubscription = subscriptionOptional.get();
+        assertThat(fetchedSubscription.getId()).isEqualTo(savedId);
+        assertThat(fetchedSubscription.getName()).isEqualTo("Hbo Max");
+        assertThat(fetchedSubscription.getPrice()).isEqualByComparingTo(new BigDecimal("13.99"));
+    }
+
+    @Test
+    void findSubscriptionById_whenSubscriptionDoesntExist_shouldReturnEmptyOptional() {
+        // Act
+        Optional<Subscription> subscriptionOptional = subscriptionDao.findById(-1L);
+
+        // Assert
+        assertThat(subscriptionOptional).isEmpty();
     }
 }
