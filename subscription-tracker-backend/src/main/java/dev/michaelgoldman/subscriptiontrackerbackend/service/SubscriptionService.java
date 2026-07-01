@@ -55,4 +55,8 @@ public class SubscriptionService {
         }
         return SubscriptionResponse.fromEntity(subscriptionToUpdate);
     }
+
+    public long countSubscriptions() {
+        return subscriptionDao.count();
+    }
 }

@@ -273,7 +273,7 @@ class SubscriptionControllerTest {
     }
 
     @Nested
-    @DisplayName("UPDATE /subscriptions/{id}")
+    @DisplayName("PUT /subscriptions/{id}")
     class UpdateSubscription {
         @Test
         void updateSubscription_whenValidDetailsProvided_shouldPassSubscriptionIdAndRequestToService() throws Exception {
@@ -371,6 +371,23 @@ class SubscriptionControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("GET /subscriptions/count")
+    class CountSubscriptions {
+        @Test
+        void countSubscriptions_shouldReturn200WithSubscriptionCountResponse() throws Exception {
+            // Arrange
+            Long count = 5L;
+            when(subscriptionService.countSubscriptions()).thenReturn(count);
+
+            // Act & Assert
+            mockMvc.perform(countSubscriptions())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.count").value(equalTo(count), Long.class));
+        }
+    }
+
     private static Stream<Arguments> invalidSubscriptionProvider() {
         return Stream.of(
                 Arguments.of(
@@ -448,6 +465,11 @@ class SubscriptionControllerTest {
     private MockHttpServletRequestBuilder putSubscription(Object subscriptionId) {
         return put("/subscriptions/{id}", subscriptionId)
                 .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+    }
+
+    private MockHttpServletRequestBuilder countSubscriptions() {
+        return get("/subscriptions/count")
                 .accept(MediaType.APPLICATION_JSON);
     }
 }

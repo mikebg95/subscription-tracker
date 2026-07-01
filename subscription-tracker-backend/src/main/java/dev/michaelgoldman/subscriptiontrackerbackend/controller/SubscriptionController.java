@@ -1,5 +1,6 @@
 package dev.michaelgoldman.subscriptiontrackerbackend.controller;
 
+import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionCountResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionRequest;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.service.SubscriptionService;
@@ -62,5 +63,12 @@ public class SubscriptionController {
     public ResponseEntity<SubscriptionResponse> updateSubscription(@PathVariable @Positive Long id, @Valid @RequestBody SubscriptionRequest subscriptionRequest) {
         SubscriptionResponse subscriptionResponse = subscriptionService.updateSubscription(id, subscriptionRequest);
         return ResponseEntity.ok(subscriptionResponse);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<SubscriptionCountResponse> countSubscriptions() {
+        long count = subscriptionService.countSubscriptions();
+        SubscriptionCountResponse countResponse = new SubscriptionCountResponse(count);
+        return ResponseEntity.ok(countResponse);
     }
 }

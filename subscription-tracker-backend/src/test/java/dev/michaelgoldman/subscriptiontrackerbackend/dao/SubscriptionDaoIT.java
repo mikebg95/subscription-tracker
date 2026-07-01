@@ -279,4 +279,33 @@ class SubscriptionDaoIT {
                     .isInstanceOf(SubscriptionAlreadyExistsException.class);
         }
     }
+
+    @Nested
+    @DisplayName("count")
+    class Count {
+        @Test
+        void countSubscriptions_whenSubscriptionsExist_shouldReturnSubscriptionCount() {
+            // Arrange
+            String sqlInsert = "INSERT INTO subscriptions (name, price) VALUES (?, ?)";
+            jdbcTemplate.update(sqlInsert, "Netflix", new BigDecimal("8.99"));
+            jdbcTemplate.update(sqlInsert, "Amazon Prime", new BigDecimal("13.99"));
+            jdbcTemplate.update(sqlInsert, "HBO Max", new BigDecimal("19.99"));
+            jdbcTemplate.update(sqlInsert, "Claude Code", new BigDecimal("22.99"));
+
+            // Act
+            long count = subscriptionDao.count();
+
+            // Assert
+            assertThat(count).isEqualTo(4L);
+        }
+
+        @Test
+        void countSubscriptions_whenNoSubscriptionsExist_shouldReturnZero() {
+            // Act
+            long count = subscriptionDao.count();
+
+            // Assert
+            assertThat(count).isZero();
+        }
+    }
 }

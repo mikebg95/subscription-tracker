@@ -11,4 +11,5 @@ public interface SubscriptionDao {
     Optional<Subscription> findById(Long id);
     int deleteById(Long id);
     int update(Subscription subscription);
+    long count();
 }

@@ -223,4 +223,20 @@ class SubscriptionServiceTest {
                     .isInstanceOf(SubscriptionAlreadyExistsException.class);
         }
     }
+
+    @Nested
+    @DisplayName("countSubscriptions")
+    class CountSubscriptions {
+        @Test
+        void countSubscriptions_shouldReturnSubscriptionCount() {
+            // Arrange
+            when(subscriptionDao.count()).thenReturn(4L);
+
+            // Act
+            long count = subscriptionService.countSubscriptions();
+
+            // Assert
+            assertThat(count).isEqualTo(4);
+        }
+    }
 }
