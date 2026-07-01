@@ -10,4 +10,5 @@ public interface SubscriptionDao {
     List<Subscription> findAll();
     Optional<Subscription> findById(Long id);
     int deleteById(Long id);
+    int update(Subscription subscription);
 }

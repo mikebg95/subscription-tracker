@@ -53,4 +53,15 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         String sql = "DELETE FROM subscriptions WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public int update(Subscription subscription) {
+        String sql = "UPDATE subscriptions SET name = ?, price = ? WHERE id = ?";
+
+        try {
+            return jdbcTemplate.update(sql, subscription.getName(), subscription.getPrice(), subscription.getId());
+        } catch (DuplicateKeyException e) {
+            throw new SubscriptionAlreadyExistsException("A subscription with that name already exists", e);
+        }
+    }
 }
