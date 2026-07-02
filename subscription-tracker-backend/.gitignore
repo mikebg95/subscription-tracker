@@ -35,3 +35,6 @@ build/
 
 ### macOs ###
 .DS_Store
+
+## Claude ###
+.claude/

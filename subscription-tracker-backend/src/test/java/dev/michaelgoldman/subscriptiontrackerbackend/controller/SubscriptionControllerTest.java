@@ -50,6 +50,8 @@ class SubscriptionControllerTest {
     private static final String SUBSCRIPTION_NAME = "Netflix";
     private static final BigDecimal SUBSCRIPTION_PRICE = new BigDecimal("8.99");
     private static final Long NON_EXISTING_SUBSCRIPTION_ID = 999L;
+    private static final String NOT_FOUND_DETAIL = "No subscription found with id " + NON_EXISTING_SUBSCRIPTION_ID + ".";
+    private static final String DUPLICATE_DETAIL = "A subscription with that name already exists.";
     private static final String VALID_REQUEST_BODY = """
             { "name": "Netflix", "price": 8.99 }
             """;
@@ -98,13 +100,16 @@ class SubscriptionControllerTest {
         @Test
         void createSubscription_whenServiceThrowsSubscriptionAlreadyExistsException_shouldReturn409() throws Exception {
             // Arrange
-            when(subscriptionService.createSubscription(any(SubscriptionRequest.class))).thenThrow(SubscriptionAlreadyExistsException.class);
+            when(subscriptionService.createSubscription(any(SubscriptionRequest.class)))
+                    .thenThrow(new SubscriptionAlreadyExistsException(DUPLICATE_DETAIL, null));
 
             // Act & Assert
             mockMvc.perform(postSubscription().content(VALID_REQUEST_BODY))
                     .andExpect(status().isConflict())
                     .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-                    .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
+                    .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()))
+                    .andExpect(jsonPath("$.title").value("Duplicate subscription"))
+                    .andExpect(jsonPath("$.detail").value(DUPLICATE_DETAIL));
         }
 
         @Test
@@ -203,13 +208,16 @@ class SubscriptionControllerTest {
         @Test
         void getSubscriptionById_whenNonExistingIdProvided_shouldReturn404() throws Exception {
             // Arrange
-            when(subscriptionService.getSubscriptionById(NON_EXISTING_SUBSCRIPTION_ID)).thenThrow(SubscriptionNotFoundException.class);
+            when(subscriptionService.getSubscriptionById(NON_EXISTING_SUBSCRIPTION_ID))
+                    .thenThrow(new SubscriptionNotFoundException(NON_EXISTING_SUBSCRIPTION_ID));
 
             // Act & Assert
             mockMvc.perform(getSubscription(NON_EXISTING_SUBSCRIPTION_ID))
                     .andExpect(status().isNotFound())
                     .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-                    .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+                    .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(jsonPath("$.title").value("Subscription not found"))
+                    .andExpect(jsonPath("$.detail").value(NOT_FOUND_DETAIL));
         }
 
         @ParameterizedTest
@@ -250,13 +258,16 @@ class SubscriptionControllerTest {
         @Test
         void deleteSubscriptionById_whenNonExistingIdProvided_shouldReturn404() throws Exception {
             // Arrange
-            doThrow(SubscriptionNotFoundException.class).when(subscriptionService).deleteSubscriptionById(NON_EXISTING_SUBSCRIPTION_ID);
+            doThrow(new SubscriptionNotFoundException(NON_EXISTING_SUBSCRIPTION_ID))
+                    .when(subscriptionService).deleteSubscriptionById(NON_EXISTING_SUBSCRIPTION_ID);
 
             // Act & Assert
             mockMvc.perform(deleteSubscription(NON_EXISTING_SUBSCRIPTION_ID))
                     .andExpect(status().isNotFound())
                     .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-                    .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+                    .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(jsonPath("$.title").value("Subscription not found"))
+                    .andExpect(jsonPath("$.detail").value(NOT_FOUND_DETAIL));
         }
 
         @ParameterizedTest
@@ -315,26 +326,30 @@ class SubscriptionControllerTest {
         void updateSubscription_whenSubscriptionDoesNotExist_shouldReturn404() throws Exception {
             // Arrange
             when(subscriptionService.updateSubscription(any(Long.class), any(SubscriptionRequest.class)))
-                    .thenThrow(SubscriptionNotFoundException.class);
+                    .thenThrow(new SubscriptionNotFoundException(NON_EXISTING_SUBSCRIPTION_ID));
 
             // Act & Assert
             mockMvc.perform(putSubscription(SUBSCRIPTION_ID).content(VALID_REQUEST_BODY))
                     .andExpect(status().isNotFound())
                     .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-                    .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+                    .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                    .andExpect(jsonPath("$.title").value("Subscription not found"))
+                    .andExpect(jsonPath("$.detail").value(NOT_FOUND_DETAIL));
         }
 
         @Test
         void updateSubscription_whenNameAlreadyExists_shouldReturn409() throws Exception {
             // Arrange
             when(subscriptionService.updateSubscription(any(Long.class), any(SubscriptionRequest.class)))
-                    .thenThrow(SubscriptionAlreadyExistsException.class);
+                    .thenThrow(new SubscriptionAlreadyExistsException(DUPLICATE_DETAIL, null));
 
             // Act & Assert
             mockMvc.perform(putSubscription(SUBSCRIPTION_ID).content(VALID_REQUEST_BODY))
                     .andExpect(status().isConflict())
                     .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-                    .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
+                    .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()))
+                    .andExpect(jsonPath("$.title").value("Duplicate subscription"))
+                    .andExpect(jsonPath("$.detail").value(DUPLICATE_DETAIL));
         }
 
         @ParameterizedTest
