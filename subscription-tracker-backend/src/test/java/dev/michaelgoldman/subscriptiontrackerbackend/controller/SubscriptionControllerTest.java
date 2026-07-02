@@ -1,5 +1,6 @@
 package dev.michaelgoldman.subscriptiontrackerbackend.controller;
 
+import dev.michaelgoldman.subscriptiontrackerbackend.config.WebConfig;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionRequest;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionAlreadyExistsException;
@@ -15,6 +16,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -44,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SubscriptionController.class)
+@Import(WebConfig.class)
 class SubscriptionControllerTest {
 
     private static final Long SUBSCRIPTION_ID = 1L;
@@ -457,34 +460,34 @@ class SubscriptionControllerTest {
     }
 
     private MockHttpServletRequestBuilder postSubscription() {
-        return post("/subscriptions")
+        return post("/api/v1/subscriptions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
     }
 
     private MockHttpServletRequestBuilder getSubscriptions() {
-        return get("/subscriptions")
+        return get("/api/v1//subscriptions")
                 .accept(MediaType.APPLICATION_JSON);
     }
 
     private MockHttpServletRequestBuilder getSubscription(Object subscriptionId) {
-        return get("/subscriptions/{id}", subscriptionId)
+        return get("/api/v1//subscriptions/{id}", subscriptionId)
                 .accept(MediaType.APPLICATION_JSON);
     }
 
     private MockHttpServletRequestBuilder deleteSubscription(Object subscriptionId) {
-        return delete("/subscriptions/{id}", subscriptionId)
+        return delete("/api/v1//subscriptions/{id}", subscriptionId)
                 .accept(MediaType.APPLICATION_JSON);
     }
 
     private MockHttpServletRequestBuilder putSubscription(Object subscriptionId) {
-        return put("/subscriptions/{id}", subscriptionId)
+        return put("/api/v1//subscriptions/{id}", subscriptionId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
     }
 
     private MockHttpServletRequestBuilder countSubscriptions() {
-        return get("/subscriptions/count")
+        return get("/api/v1//subscriptions/count")
                 .accept(MediaType.APPLICATION_JSON);
     }
 }
