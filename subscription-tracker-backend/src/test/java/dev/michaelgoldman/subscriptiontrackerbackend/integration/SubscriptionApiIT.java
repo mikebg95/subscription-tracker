@@ -40,7 +40,7 @@ class SubscriptionApiIT {
 
         SubscriptionResponse createResponse = restTestClient
                 .post()
-                .uri("/subscriptions")
+                .uri("/api/v1/subscriptions")
                 .body(createRequest)
                 .exchange()
                 .expectStatus().isCreated()
@@ -54,7 +54,7 @@ class SubscriptionApiIT {
         // Read
         SubscriptionResponse readResponse = restTestClient
                 .get()
-                .uri("/subscriptions/{id}", createdId)
+                .uri("/api/v1/subscriptions/{id}", createdId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(SubscriptionResponse.class)
@@ -71,7 +71,7 @@ class SubscriptionApiIT {
 
         SubscriptionResponse updateResponse = restTestClient
                 .put()
-                .uri("/subscriptions/{id}", createdId)
+                .uri("/api/v1/subscriptions/{id}", createdId)
                 .body(updateRequest)
                 .exchange()
                 .expectStatus().isOk()
@@ -87,14 +87,14 @@ class SubscriptionApiIT {
         // Delete
         restTestClient
                 .delete()
-                .uri("/subscriptions/{id}", createdId)
+                .uri("/api/v1/subscriptions/{id}", createdId)
                 .exchange()
                 .expectStatus().isNoContent();
 
         // Confirm gone
         ProblemDetail problemDetail = restTestClient
                 .get()
-                .uri("/subscriptions/{id}", createdId)
+                .uri("/api/v1/subscriptions/{id}", createdId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ProblemDetail.class)
