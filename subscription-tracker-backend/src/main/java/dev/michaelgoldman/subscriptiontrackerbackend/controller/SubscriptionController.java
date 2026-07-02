@@ -4,6 +4,7 @@ import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionCountRespon
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionRequest;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.service.SubscriptionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@Tag(name = "Subscriptions", description = "Endpoint for managing subscriptions")
 @RequiredArgsConstructor
 @RequestMapping("/subscriptions")
 public class SubscriptionController {
