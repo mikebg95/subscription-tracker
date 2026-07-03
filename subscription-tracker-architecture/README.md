@@ -1,11 +1,11 @@
-# Subscription Tracker - Architecture & Diagrams
+# Recipe Book - Architecture & Diagrams
 
-This repository contains the software architecture blueprints for the Subscription Tracker ecosystem, including the **C4 Model** (via **Structurizr**) and the **database schema** (via **DBML**).
+This repository contains the software architecture blueprints for the Recipe Book ecosystem, including the **C4 Model** (via **Structurizr**) and the **database schema** (via **DBML**).
 
 ## Repository Structure
 
 ```
-subscription-tracker-architecture/
+recipe-book-tracker-architecture/
 ├── README.md
 ├── .gitignore
 ├── c4/
@@ -28,7 +28,7 @@ The architecture is written as code using the Structurizr DSL (`c4/workspace.dsl
 1. Open your terminal and navigate to the C4 folder:
 
    ```bash
-   cd subscription-tracker-architecture/c4
+   cd recipe-book-architecture/c4
    ```
 
 2. Run the following Docker command to spin up Structurizr Lite (this mounts the current folder containing the `workspace.dsl` file):
@@ -43,7 +43,7 @@ The architecture is written as code using the Structurizr DSL (`c4/workspace.dsl
 
 Once the browser UI loads, you can toggle between three conceptual layers:
 
-1. **System Context** — High-level overview showing how the user interacts with the Subscription Tracker system.
+1. **System Context** — High-level overview showing how the user interacts with the Recipe Book system.
 2. **Container View** — Zoomed-in look at the Frontend (Angular), Backend API (Spring Boot), and Database (PostgreSQL).
 3. **Component View** — Deep-dive into the Backend API's internal structure (Controllers, Services, DAOs).
 
