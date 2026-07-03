@@ -1,3 +1,7 @@
 package dev.michaelgoldman.subscriptiontrackerbackend.dto;
 
-public record SubscriptionCountResponse(long count) {}
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "The total number of subscriptions.")
+public record SubscriptionCountResponse(
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED) long count) {}
