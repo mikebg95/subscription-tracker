@@ -34,7 +34,7 @@ The architecture is written as code using the Structurizr DSL (`c4/workspace.dsl
 2. Run the following Docker command to spin up Structurizr Lite (this mounts the current folder containing the `workspace.dsl` file):
 
    ```bash
-   docker run -it --rm -p 9090:8080 -v "$(pwd)":/usr/local/structurizr structurizr/lite
+   docker run -it --rm -p 9090:8080 -v "$(pwd)":/usr/local/structurizr structurizr/structurizr local
    ```
 
 3. Open your web browser and navigate to **http://localhost:9090**
