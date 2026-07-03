@@ -1,6 +1,6 @@
 workspace "Subscription Tracker" "A personal finance tool to track software subscriptions and calculate monthly spending." {
     model {
-        user = person "User" "An individual who tracks their recurring software costs and monitors upcoming renewal dates."
+        user = person "User" "An individual who tracks their recurring subscription costs and monitors upcoming renewal dates."
         
         subscriptionTracker = softwareSystem "Subscription Tracker" "Centralizes software subscription data, calculates monthly spending, and tracks renewal metrics." {
             frontend = container "Frontend Web Application" "Provides the user interface for viewing, editing, and managing personal software subscriptions." "Angular"
@@ -20,42 +20,42 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
     }
 
     views {
-            systemContext subscriptionTracker "SystemContext" {
-                include *
-                autolayout lr
-            }
+        systemContext subscriptionTracker "SystemContext" {
+            include *
+            autolayout lr
+        }
 
-            container subscriptionTracker "Containers" {
-                include *
-                autolayout lr
-            }
+        container subscriptionTracker "Containers" {
+            include *
+            autolayout lr
+        }
 
-            component backend "Component" {
-                include *
-                autolayout lr
-            }
+        component backend "Component" {
+            include *
+            autolayout lr
+        }
 
-            styles {
-                element "Person" {
-                    background #08427b
-                    color #ffffff
-                    shape Person
-                }
-                element "Software System" {
-                    background #1168bd
-                    color #ffffff 
-                }    
-                element "Container" {
-                    background #438dd5
-                    color #ffffff
-                }
-                element "Component" {
-                    background #85bbf0
-                    color #000000
-                }
-                element "Database" {
-                    shape Cylinder
-                }
+        styles {
+            element "Person" {
+                background #08427b
+                color #ffffff
+                shape Person
+            }
+            element "Software System" {
+                background #1168bd
+                color #ffffff 
+            }    
+            element "Container" {
+                background #438dd5
+                color #ffffff
+            }
+            element "Component" {
+                background #85bbf0
+                color #000000
+            }
+            element "Database" {
+                shape Cylinder
             }
         }
+    }
 }
