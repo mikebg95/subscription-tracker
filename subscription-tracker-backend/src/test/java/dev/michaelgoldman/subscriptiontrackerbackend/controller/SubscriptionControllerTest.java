@@ -406,6 +406,23 @@ class SubscriptionControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("GET /subscriptions/total")
+    class CalculateTotal {
+        @Test
+        void calculateTotal_shouldReturn200WithTotalAmount() throws Exception {
+            // Arrange
+            BigDecimal totalAmount = new BigDecimal("24.96");
+            when(subscriptionService.calculateTotal()).thenReturn(totalAmount);
+
+            // Act & Assert
+            mockMvc.perform(calculateTotal())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.amount").value(comparesEqualTo(totalAmount), BigDecimal.class));
+        }
+    }
+
     private static Stream<Arguments> invalidSubscriptionProvider() {
         return Stream.of(
                 Arguments.of(
@@ -488,6 +505,11 @@ class SubscriptionControllerTest {
 
     private MockHttpServletRequestBuilder countSubscriptions() {
         return get("/api/v1//subscriptions/count")
+                .accept(MediaType.APPLICATION_JSON);
+    }
+
+    private MockHttpServletRequestBuilder calculateTotal() {
+        return get("/api/v1/subscriptions/total")
                 .accept(MediaType.APPLICATION_JSON);
     }
 }

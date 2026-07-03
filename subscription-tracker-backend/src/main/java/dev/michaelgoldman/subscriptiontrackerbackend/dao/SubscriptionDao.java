@@ -2,6 +2,7 @@ package dev.michaelgoldman.subscriptiontrackerbackend.dao;
 
 import dev.michaelgoldman.subscriptiontrackerbackend.model.Subscription;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,4 +13,5 @@ public interface SubscriptionDao {
     int deleteById(Long id);
     int update(Subscription subscription);
     long count();
+    BigDecimal total();
 }

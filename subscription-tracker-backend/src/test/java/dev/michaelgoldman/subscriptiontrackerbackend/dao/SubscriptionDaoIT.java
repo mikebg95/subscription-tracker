@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,7 +68,7 @@ class SubscriptionDaoIT {
         void saveSubscription_whenDuplicateSubscriptionNameDifferentCasesProvided_shouldThrowSubscriptionAlreadyExistsException() {
             // Arrange
             Subscription firstSubscription = new Subscription("HBO Max", new BigDecimal("5.99"));
-            Subscription duplicateSubscription =  new Subscription("Hbo max", new BigDecimal("13.99"));
+            Subscription duplicateSubscription =  new Subscription("HBO max", new BigDecimal("13.99"));
             subscriptionDao.save(firstSubscription);
 
             // Act & Assert
@@ -141,15 +142,9 @@ class SubscriptionDaoIT {
         @Test
         void findAllSubscriptions_whenSubscriptionsExist_shouldReturnListOfSubscriptionsOrderedById() {
             // Arrange
-            Subscription sample1 = new Subscription("Netflix", new BigDecimal("11.99"));
-            Subscription sample2 = new Subscription("Disney Plus", new BigDecimal("8.99"));
-            Subscription sample3 = new Subscription("Amazon Prime", new BigDecimal("3.99"));
-
-            String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?)";
-
-            jdbcTemplate.update(sql, sample1.getName(), sample1.getPrice());
-            jdbcTemplate.update(sql, sample2.getName(), sample2.getPrice());
-            jdbcTemplate.update(sql, sample3.getName(), sample3.getPrice());
+            insertSubscription("Netflix", "11.99");
+            insertSubscription("Disney Plus", "8.99");
+            insertSubscription("Amazon Prime", "3.99");
 
             // Act
             List<Subscription> fetchedSubscriptions = subscriptionDao.findAll();
@@ -177,10 +172,8 @@ class SubscriptionDaoIT {
         @Test
         void findSubscriptionById_whenExistingIdProvided_shouldReturnCorrectSubscription() {
             // Arrange
-            String sqlWithoutReturning = "INSERT INTO subscriptions (name, price) VALUES (?, ?)";
-            String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id";
-            jdbcTemplate.update(sqlWithoutReturning, "Netflix", new BigDecimal("8.99"));
-            Long savedId = jdbcTemplate.queryForObject(sql, Long.class, "Hbo Max", new BigDecimal("13.99"));
+            insertSubscription("Netflix", "8.99");
+            Long savedId = insertSubscription("HBO Max", "13.99");
 
             // Act
             Optional<Subscription> subscriptionOptional = subscriptionDao.findById(savedId);
@@ -189,7 +182,7 @@ class SubscriptionDaoIT {
             assertThat(subscriptionOptional).isPresent();
             Subscription fetchedSubscription = subscriptionOptional.get();
             assertThat(fetchedSubscription.getId()).isEqualTo(savedId);
-            assertThat(fetchedSubscription.getName()).isEqualTo("Hbo Max");
+            assertThat(fetchedSubscription.getName()).isEqualTo("HBO Max");
             assertThat(fetchedSubscription.getPrice()).isEqualByComparingTo(new BigDecimal("13.99"));
         }
 
@@ -209,9 +202,8 @@ class SubscriptionDaoIT {
         @Test
         void deleteSubscriptionById_whenExistingIdProvided_shouldRemoveSubscriptionAndReturnOne() {
             // Arrange
-            String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id";
-            Long savedId1 = jdbcTemplate.queryForObject(sql, Long.class, "Hbo Max", new BigDecimal("8.99"));
-            Long savedId2 = jdbcTemplate.queryForObject(sql, Long.class, "Netflix", new BigDecimal("8.99"));
+            Long savedId1 = insertSubscription("HBO Max", "8.99");
+            Long savedId2 = insertSubscription("Netflix", "13.99");
 
             // Act
             int rowsDeleted = subscriptionDao.deleteById(savedId2);
@@ -241,8 +233,7 @@ class SubscriptionDaoIT {
         @Test
         void updateSubscription_whenValidDetailsProvided_shouldUpdateSubscriptionAndReturnOne() {
             // Arrange
-            String insertSql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id";
-            Long savedId = jdbcTemplate.queryForObject(insertSql, Long.class, "Netflix", new BigDecimal("8.99"));
+            Long savedId = insertSubscription("Netflix", "8.99");
             Subscription updateSub = new Subscription(savedId, "Amazon Prime", new BigDecimal("13.99"));
 
             // Act
@@ -271,10 +262,8 @@ class SubscriptionDaoIT {
         @Test
         void updateSubscription_whenNameAlreadyExists_shouldThrowSubscriptionAlreadyExistsException() {
             // Arrange
-            String sqlInsertReturning = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id";
-            String sqlInsert = "INSERT INTO subscriptions (name, price) VALUES (?, ?)";
-            Long id1 = jdbcTemplate.queryForObject(sqlInsertReturning, Long.class, "Netflix", new BigDecimal("8.99"));
-            jdbcTemplate.update(sqlInsert, "HBO Max", new BigDecimal("13.99"));
+            Long id1 = insertSubscription("Netflix", "8.99");
+            insertSubscription("HBO Max", "13.99");
 
             // Act & Assert
             assertThatThrownBy(() -> subscriptionDao.update(new Subscription(id1, "HBO Max", new BigDecimal("19.99"))))
@@ -288,11 +277,10 @@ class SubscriptionDaoIT {
         @Test
         void countSubscriptions_whenSubscriptionsExist_shouldReturnSubscriptionCount() {
             // Arrange
-            String sqlInsert = "INSERT INTO subscriptions (name, price) VALUES (?, ?)";
-            jdbcTemplate.update(sqlInsert, "Netflix", new BigDecimal("8.99"));
-            jdbcTemplate.update(sqlInsert, "Amazon Prime", new BigDecimal("13.99"));
-            jdbcTemplate.update(sqlInsert, "HBO Max", new BigDecimal("19.99"));
-            jdbcTemplate.update(sqlInsert, "Claude Code", new BigDecimal("22.99"));
+            insertSubscription("Netflix", "8.99");
+            insertSubscription("Amazon Prime", "13.99");
+            insertSubscription("HBO Max", "19.99");
+            insertSubscription("Claude Code", "22.99");
 
             // Act
             long count = subscriptionDao.count();
@@ -309,5 +297,50 @@ class SubscriptionDaoIT {
             // Assert
             assertThat(count).isZero();
         }
+    }
+
+    @Nested
+    @DisplayName("total")
+    class Total {
+        @Test
+        void totalAmount_whenMultipleSubscriptionsExist_shouldReturnCorrectAmount() {
+            // Arrange
+            insertSubscription("Netflix", "8.99");
+            insertSubscription("Amazon Prime", "13.99");
+            insertSubscription("HBO Max", "19.99");
+            insertSubscription("Claude Code", "22.99");
+
+            // Act
+            BigDecimal amount = subscriptionDao.total();
+
+            // Assert
+            assertThat(amount).isEqualByComparingTo(new BigDecimal("65.96"));
+        }
+
+        @Test
+        void totalAmount_whenNoSubscriptionsExist_shouldReturnZero() {
+            // Act
+            BigDecimal amount = subscriptionDao.total();
+
+            // Assert
+            assertThat(amount).isEqualByComparingTo(BigDecimal.ZERO);
+        }
+
+        @Test
+        void totalAmount_whenOneSubscriptionExists_shouldReturnCorrectAmount() {
+            // Arrange
+            insertSubscription("Netflix", "8.99");
+
+            // Act
+            BigDecimal amount = subscriptionDao.total();
+
+            // Assert
+            assertThat(amount).isEqualByComparingTo(new BigDecimal("8.99"));
+        }
+    }
+
+    private long insertSubscription(String name, String price) {
+        String sql = "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id";
+        return Objects.requireNonNull(jdbcTemplate.queryForObject(sql, Long.class, name, new BigDecimal(price)));
     }
 }

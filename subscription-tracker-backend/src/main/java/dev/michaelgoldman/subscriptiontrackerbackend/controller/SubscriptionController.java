@@ -3,6 +3,7 @@ package dev.michaelgoldman.subscriptiontrackerbackend.controller;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionCountResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionRequest;
 import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
+import dev.michaelgoldman.subscriptiontrackerbackend.dto.TotalAmountResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.service.SubscriptionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -72,5 +74,12 @@ public class SubscriptionController {
         long count = subscriptionService.countSubscriptions();
         SubscriptionCountResponse countResponse = new SubscriptionCountResponse(count);
         return ResponseEntity.ok(countResponse);
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<TotalAmountResponse> calculateTotal() {
+        BigDecimal amount = subscriptionService.calculateTotal();
+        TotalAmountResponse totalAmountResponse = new TotalAmountResponse(amount);
+        return ResponseEntity.ok(totalAmountResponse);
     }
 }

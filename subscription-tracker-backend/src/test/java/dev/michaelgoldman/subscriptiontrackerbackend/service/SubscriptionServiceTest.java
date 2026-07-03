@@ -236,7 +236,24 @@ class SubscriptionServiceTest {
             long count = subscriptionService.countSubscriptions();
 
             // Assert
-            assertThat(count).isEqualTo(4);
+            assertThat(count).isEqualTo(4L);
+        }
+    }
+
+    @Nested
+    @DisplayName("calculateTotal")
+    class CalculateTotal {
+        @Test
+        void calculateTotal_shouldReturnTotalAmount() {
+            // Arrange
+            BigDecimal expectedAmount = new BigDecimal("49.99");
+            when(subscriptionDao.total()).thenReturn(expectedAmount);
+
+            // Act
+            BigDecimal amount = subscriptionService.calculateTotal();
+
+            // Assert
+            assertThat(amount).isEqualByComparingTo(expectedAmount);
         }
     }
 }

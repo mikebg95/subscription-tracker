@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -69,5 +70,11 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         String sql = "SELECT COUNT(*) FROM subscriptions";
         Long count = jdbcTemplate.queryForObject(sql, Long.class);
         return Objects.requireNonNull(count);
+    }
+
+    @Override
+    public BigDecimal total() {
+        String sql = "SELECT COALESCE(SUM(price), 0) FROM subscriptions";
+        return jdbcTemplate.queryForObject(sql, BigDecimal.class);
     }
 }

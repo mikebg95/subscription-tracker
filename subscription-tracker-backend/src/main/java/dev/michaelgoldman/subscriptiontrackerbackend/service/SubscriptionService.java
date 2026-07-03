@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -58,5 +59,9 @@ public class SubscriptionService {
 
     public long countSubscriptions() {
         return subscriptionDao.count();
+    }
+
+    public BigDecimal calculateTotal() {
+        return subscriptionDao.total();
     }
 }
