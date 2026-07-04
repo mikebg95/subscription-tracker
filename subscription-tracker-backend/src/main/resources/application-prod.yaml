@@ -11,3 +11,7 @@ logging:
   level:
     root: INFO
     dev.michaelgoldman.subscriptiontrackerbackend: INFO
+
+  structured:
+    format:
+      console: ecs

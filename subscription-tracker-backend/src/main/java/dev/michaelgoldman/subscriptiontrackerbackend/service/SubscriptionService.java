@@ -6,6 +6,7 @@ import dev.michaelgoldman.subscriptiontrackerbackend.dto.SubscriptionResponse;
 import dev.michaelgoldman.subscriptiontrackerbackend.exception.SubscriptionNotFoundException;
 import dev.michaelgoldman.subscriptiontrackerbackend.model.Subscription;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +16,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class SubscriptionService {
     private final SubscriptionDao subscriptionDao;
 
     @Transactional
     public SubscriptionResponse createSubscription(SubscriptionRequest subscriptionRequest) {
         Subscription savedSubscription = subscriptionDao.save(subscriptionRequest.toEntity());
+        log.info("Created subscription id={} name={}", savedSubscription.getId(), savedSubscription.getName());
         return SubscriptionResponse.fromEntity(savedSubscription);
     }
 
@@ -45,6 +48,7 @@ public class SubscriptionService {
         if (rowsDeleted == 0) {
             throw new SubscriptionNotFoundException(id);
         }
+        log.info("Deleted subscription id={}", id);
     }
 
     @Transactional
@@ -54,6 +58,8 @@ public class SubscriptionService {
         if (rowsUpdated == 0) {
             throw new SubscriptionNotFoundException(id);
         }
+        log.info("Updated subscription id={} name={}", id, subscriptionRequest.name());
+
         return SubscriptionResponse.fromEntity(subscriptionToUpdate);
     }
 
