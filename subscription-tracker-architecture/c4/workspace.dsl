@@ -42,7 +42,6 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Returns saved row"
             dao -> service "Returns Subscription"
             service -> controller "Returns SubscriptionResponse"
-            autolayout lr
         }
 
         dynamic backend "GetAllSubscriptions" "Flow for fetching all subscriptions" {
@@ -52,7 +51,6 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Returns rows"
             dao -> service "Returns List<Subscription>"
             service -> controller "Returns List<SubscriptionResponse>"
-            autolayout lr
         }
 
         dynamic backend "GetSubscriptionById" "Flow for fetching a single subscription by id" {
@@ -62,7 +60,6 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Returns the matching row"
             dao -> service "Returns Optional<Subscription>"
             service -> controller "Returns SubscriptionResponse"
-            autolayout lr
         }
 
         dynamic backend "UpdateSubscription" "Flow for updating an existing subscription" {
@@ -72,7 +69,6 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Returns rows affected"
             dao -> service "Returns rows-updated count"
             service -> controller "Returns SubscriptionResponse built from the request"
-            autolayout lr
         }
 
         dynamic backend "DeleteSubscription" "Flow for deleting a subscription by id" {
@@ -82,7 +78,6 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Returns rows affected"
             dao -> service "Returns rows-deleted count"
             service -> controller "Confirms deletion (204 No Content)"
-            autolayout lr
         }
 
         dynamic backend "CalculateTotal" "Flow for calculating total monthly spending" {
@@ -92,7 +87,6 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Returns the summed total"
             dao -> service "Returns BigDecimal"
             service -> controller "Returns TotalAmountResponse"
-            autolayout lr
         }
 
         dynamic backend "CountSubscriptions" "Flow for counting subscriptions" {
@@ -102,7 +96,6 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Returns the count"
             dao -> service "Returns long"
             service -> controller "Returns SubscriptionCountResponse"
-            autolayout lr
         }
 
         dynamic backend "GetSubscriptionByIdNotFound" "Error flow: requested subscription does not exist" {
@@ -112,7 +105,6 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Returns no rows"
             dao -> service "Returns empty Optional<Subscription>"
             service -> controller "Throws SubscriptionNotFoundException; responds 404 Not Found"
-            autolayout lr
         }
 
         dynamic backend "CreateSubscriptionDuplicateName" "Error flow: subscription name already exists" {
@@ -122,13 +114,11 @@ workspace "Subscription Tracker" "A personal finance tool to track software subs
             database -> dao "Rejects the insert: duplicate name violates the unique index"
             dao -> service "Translates the violation and throws SubscriptionAlreadyExistsException"
             service -> controller "Propagates the exception; responds 409 Conflict"
-            autolayout lr
         }
 
         dynamic backend "CreateSubscriptionValidationFailure" "Error flow: request fails validation at the boundary" {
             frontend -> controller "Submits a subscription with invalid data"
             controller -> frontend "Rejects with 400 Bad Request; the request never reaches the service"
-            autolayout lr
         }
 
         styles {

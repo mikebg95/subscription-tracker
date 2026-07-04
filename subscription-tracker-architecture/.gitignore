@@ -1,5 +1,2 @@
-# Ignore the auto-generated layout engine output
-workspace.json
-
 # Ignore OS-specific file duplicates
 .DS_Store

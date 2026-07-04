@@ -1,0 +1,1124 @@
+{
+  "configuration" : { },
+  "description" : "A personal finance tool to track software subscriptions and calculate monthly spending.",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedAgent" : "structurizr/diagrams/ece552b1-5bda-4dce-87da-93c37ef8a572",
+  "lastModifiedDate" : "2026-07-04T10:21:52Z",
+  "lastModifiedUser" : "943909565",
+  "model" : {
+    "people" : [ {
+      "description" : "An individual who tracks their recurring subscription costs and monitors upcoming renewal dates.",
+      "id" : "1",
+      "name" : "User",
+      "properties" : {
+        "structurizr.dsl.identifier" : "user"
+      },
+      "relationships" : [ {
+        "description" : "Views and edits subscription data using",
+        "destinationId" : "3",
+        "id" : "9",
+        "sourceId" : "1",
+        "tags" : "Relationship",
+        "technology" : "HTTPS"
+      }, {
+        "description" : "Views and edits subscription data using",
+        "destinationId" : "2",
+        "id" : "10",
+        "linkedRelationshipId" : "9",
+        "sourceId" : "1",
+        "technology" : "HTTPS"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "containers" : [ {
+        "description" : "Provides the user interface for viewing, adding, editing, and deleting subscriptions.",
+        "documentation" : { },
+        "id" : "3",
+        "name" : "Frontend Web Application",
+        "properties" : {
+          "structurizr.dsl.identifier" : "frontend"
+        },
+        "relationships" : [ {
+          "description" : "Makes API calls to",
+          "destinationId" : "5",
+          "id" : "11",
+          "sourceId" : "3",
+          "tags" : "Relationship",
+          "technology" : "JSON/HTTPS"
+        }, {
+          "description" : "Makes API calls to",
+          "destinationId" : "4",
+          "id" : "12",
+          "linkedRelationshipId" : "11",
+          "sourceId" : "3",
+          "technology" : "JSON/HTTPS"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Angular"
+      }, {
+        "components" : [ {
+          "description" : "Exposes REST endpoints; handles HTTP requests, responses, and status codes.",
+          "documentation" : { },
+          "id" : "5",
+          "name" : "Subscription Controller",
+          "properties" : {
+            "structurizr.dsl.identifier" : "controller"
+          },
+          "relationships" : [ {
+            "description" : "Delegates business logic execution to",
+            "destinationId" : "6",
+            "id" : "13",
+            "sourceId" : "5",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Holds business logic; validates input, maps between DTOs and entities, and interprets DAO results.",
+          "documentation" : { },
+          "id" : "6",
+          "name" : "Subscription Service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "service"
+          },
+          "relationships" : [ {
+            "description" : "Calls data access method on",
+            "destinationId" : "7",
+            "id" : "14",
+            "sourceId" : "6",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Executes hand-written SQL against the database using Spring JdbcTemplate.",
+          "documentation" : { },
+          "id" : "7",
+          "name" : "Subscription DAO",
+          "properties" : {
+            "structurizr.dsl.identifier" : "dao"
+          },
+          "relationships" : [ {
+            "description" : "Queries and updates subscription data using",
+            "destinationId" : "8",
+            "id" : "15",
+            "sourceId" : "7",
+            "tags" : "Relationship",
+            "technology" : "JDBC/SQL"
+          } ],
+          "tags" : "Element,Component"
+        } ],
+        "description" : "Handles subscription CRUD operations, calculates spending totals, and exposes a RESTful API.",
+        "documentation" : { },
+        "id" : "4",
+        "name" : "Backend API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "backend"
+        },
+        "relationships" : [ {
+          "description" : "Queries and updates subscription data using",
+          "destinationId" : "8",
+          "id" : "16",
+          "linkedRelationshipId" : "15",
+          "sourceId" : "4",
+          "technology" : "JDBC/SQL"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Java and Spring Boot"
+      }, {
+        "description" : "Stores subscription records (name, price).",
+        "documentation" : { },
+        "id" : "8",
+        "name" : "Database",
+        "properties" : {
+          "structurizr.dsl.identifier" : "database"
+        },
+        "tags" : "Element,Container,Database",
+        "technology" : "PostgreSQL"
+      } ],
+      "description" : "Tracks software subscriptions and their prices, and calculates total and monthly spending.",
+      "documentation" : { },
+      "id" : "2",
+      "name" : "Subscription Tracker",
+      "properties" : {
+        "structurizr.dsl.identifier" : "subscriptionTracker"
+      },
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Subscription Tracker",
+  "properties" : {
+    "structurizr.inspection.info" : "0",
+    "structurizr.inspection.ignore" : "0",
+    "structurizr.inspection.error" : "5",
+    "structurizr.inspection.warning" : "0",
+    "structurizr.dsl" : "d29ya3NwYWNlICJTdWJzY3JpcHRpb24gVHJhY2tlciIgIkEgcGVyc29uYWwgZmluYW5jZSB0b29sIHRvIHRyYWNrIHNvZnR3YXJlIHN1YnNjcmlwdGlvbnMgYW5kIGNhbGN1bGF0ZSBtb250aGx5IHNwZW5kaW5nLiIgewogICAgbW9kZWwgewogICAgICAgIHVzZXIgPSBwZXJzb24gIlVzZXIiICJBbiBpbmRpdmlkdWFsIHdobyB0cmFja3MgdGhlaXIgcmVjdXJyaW5nIHN1YnNjcmlwdGlvbiBjb3N0cyBhbmQgbW9uaXRvcnMgdXBjb21pbmcgcmVuZXdhbCBkYXRlcy4iCiAgICAgICAgCiAgICAgICAgc3Vic2NyaXB0aW9uVHJhY2tlciA9IHNvZnR3YXJlU3lzdGVtICJTdWJzY3JpcHRpb24gVHJhY2tlciIgIlRyYWNrcyBzb2Z0d2FyZSBzdWJzY3JpcHRpb25zIGFuZCB0aGVpciBwcmljZXMsIGFuZCBjYWxjdWxhdGVzIHRvdGFsIGFuZCBtb250aGx5IHNwZW5kaW5nLiIgewogICAgICAgIGZyb250ZW5kID0gY29udGFpbmVyICJGcm9udGVuZCBXZWIgQXBwbGljYXRpb24iICJQcm92aWRlcyB0aGUgdXNlciBpbnRlcmZhY2UgZm9yIHZpZXdpbmcsIGFkZGluZywgZWRpdGluZywgYW5kIGRlbGV0aW5nIHN1YnNjcmlwdGlvbnMuIiAiQW5ndWxhciIKICAgICAgICBiYWNrZW5kID0gY29udGFpbmVyICJCYWNrZW5kIEFQSSIgIkhhbmRsZXMgc3Vic2NyaXB0aW9uIENSVUQgb3BlcmF0aW9ucywgY2FsY3VsYXRlcyBzcGVuZGluZyB0b3RhbHMsIGFuZCBleHBvc2VzIGEgUkVTVGZ1bCBBUEkuIiAiSmF2YSBhbmQgU3ByaW5nIEJvb3QiIHsKICAgICAgICAgICAgY29udHJvbGxlciA9IGNvbXBvbmVudCAiU3Vic2NyaXB0aW9uIENvbnRyb2xsZXIiICJFeHBvc2VzIFJFU1QgZW5kcG9pbnRzOyBoYW5kbGVzIEhUVFAgcmVxdWVzdHMsIHJlc3BvbnNlcywgYW5kIHN0YXR1cyBjb2Rlcy4iCiAgICAgICAgICAgIHNlcnZpY2UgPSBjb21wb25lbnQgIlN1YnNjcmlwdGlvbiBTZXJ2aWNlIiAiSG9sZHMgYnVzaW5lc3MgbG9naWM7IHZhbGlkYXRlcyBpbnB1dCwgbWFwcyBiZXR3ZWVuIERUT3MgYW5kIGVudGl0aWVzLCBhbmQgaW50ZXJwcmV0cyBEQU8gcmVzdWx0cy4iCiAgICAgICAgICAgIGRhbyA9IGNvbXBvbmVudCAiU3Vic2NyaXB0aW9uIERBTyIgIkV4ZWN1dGVzIGhhbmQtd3JpdHRlbiBTUUwgYWdhaW5zdCB0aGUgZGF0YWJhc2UgdXNpbmcgU3ByaW5nIEpkYmNUZW1wbGF0ZS4iCiAgICAgICAgfQogICAgICAgIGRhdGFiYXNlID0gY29udGFpbmVyICJEYXRhYmFzZSIgIlN0b3JlcyBzdWJzY3JpcHRpb24gcmVjb3JkcyAobmFtZSwgcHJpY2UpLiIgIlBvc3RncmVTUUwiICJEYXRhYmFzZSIKfQoKICAgICAgICB1c2VyIC0+IGZyb250ZW5kICJWaWV3cyBhbmQgZWRpdHMgc3Vic2NyaXB0aW9uIGRhdGEgdXNpbmciICJIVFRQUyIKICAgICAgICBmcm9udGVuZCAtPiBjb250cm9sbGVyICJNYWtlcyBBUEkgY2FsbHMgdG8iICJKU09OL0hUVFBTIgogICAgICAgIGNvbnRyb2xsZXIgLT4gc2VydmljZSAiRGVsZWdhdGVzIGJ1c2luZXNzIGxvZ2ljIGV4ZWN1dGlvbiB0byIKICAgICAgICBzZXJ2aWNlIC0+IGRhbyAiQ2FsbHMgZGF0YSBhY2Nlc3MgbWV0aG9kIG9uIgogICAgICAgIGRhbyAtPiBkYXRhYmFzZSAiUXVlcmllcyBhbmQgdXBkYXRlcyBzdWJzY3JpcHRpb24gZGF0YSB1c2luZyIgIkpEQkMvU1FMIgogICAgfQoKICAgIHZpZXdzIHsKICAgICAgICBzeXN0ZW1Db250ZXh0IHN1YnNjcmlwdGlvblRyYWNrZXIgIlN5c3RlbUNvbnRleHQiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciBzdWJzY3JpcHRpb25UcmFja2VyICJDb250YWluZXJzIiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb21wb25lbnQgYmFja2VuZCAiQ29tcG9uZW50IiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBkeW5hbWljIGJhY2tlbmQgIkNyZWF0ZVN1YnNjcmlwdGlvbiIgIkZsb3cgZm9yIGNyZWF0aW5nIGEgc3Vic2NyaXB0aW9uIiB7CiAgICAgICAgICAgIGNvbnRyb2xsZXIgLT4gc2VydmljZSAiVmFsaWRhdGVzIHJlcXVlc3QgYW5kIG1hcHMgdG8gZW50aXR5IgogICAgICAgICAgICBzZXJ2aWNlIC0+IGRhbyAiU2F2ZXMgdGhlIHN1YnNjcmlwdGlvbiIKICAgICAgICAgICAgZGFvIC0+IGRhdGFiYXNlICJJTlNFUlQgLi4uIFJFVFVSTklORyBpZCwgbmFtZSwgcHJpY2UiCiAgICAgICAgICAgIGRhdGFiYXNlIC0+IGRhbyAiUmV0dXJucyBzYXZlZCByb3ciCiAgICAgICAgICAgIGRhbyAtPiBzZXJ2aWNlICJSZXR1cm5zIFN1YnNjcmlwdGlvbiIKICAgICAgICAgICAgc2VydmljZSAtPiBjb250cm9sbGVyICJSZXR1cm5zIFN1YnNjcmlwdGlvblJlc3BvbnNlIgogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBiYWNrZW5kICJHZXRBbGxTdWJzY3JpcHRpb25zIiAiRmxvdyBmb3IgZmV0Y2hpbmcgYWxsIHN1YnNjcmlwdGlvbnMiIHsKICAgICAgICAgICAgY29udHJvbGxlciAtPiBzZXJ2aWNlICJSZXF1ZXN0cyBhbGwgc3Vic2NyaXB0aW9ucyIKICAgICAgICAgICAgc2VydmljZSAtPiBkYW8gIkZldGNoZXMgYWxsIHN1YnNjcmlwdGlvbnMiCiAgICAgICAgICAgIGRhbyAtPiBkYXRhYmFzZSAiU0VMRUNUIGlkLCBuYW1lLCBwcmljZSBGUk9NIHN1YnNjcmlwdGlvbnMiCiAgICAgICAgICAgIGRhdGFiYXNlIC0+IGRhbyAiUmV0dXJucyByb3dzIgogICAgICAgICAgICBkYW8gLT4gc2VydmljZSAiUmV0dXJucyBMaXN0PFN1YnNjcmlwdGlvbj4iCiAgICAgICAgICAgIHNlcnZpY2UgLT4gY29udHJvbGxlciAiUmV0dXJucyBMaXN0PFN1YnNjcmlwdGlvblJlc3BvbnNlPiIKICAgICAgICB9CgogICAgICAgIGR5bmFtaWMgYmFja2VuZCAiR2V0U3Vic2NyaXB0aW9uQnlJZCIgIkZsb3cgZm9yIGZldGNoaW5nIGEgc2luZ2xlIHN1YnNjcmlwdGlvbiBieSBpZCIgewogICAgICAgICAgICBjb250cm9sbGVyIC0+IHNlcnZpY2UgIlJlcXVlc3RzIHRoZSBzdWJzY3JpcHRpb24gYnkgaWQiCiAgICAgICAgICAgIHNlcnZpY2UgLT4gZGFvICJGZXRjaGVzIHRoZSBzdWJzY3JpcHRpb24gYnkgaWQiCiAgICAgICAgICAgIGRhbyAtPiBkYXRhYmFzZSAiU0VMRUNUIGlkLCBuYW1lLCBwcmljZSBGUk9NIHN1YnNjcmlwdGlvbnMgV0hFUkUgaWQgPSA/IgogICAgICAgICAgICBkYXRhYmFzZSAtPiBkYW8gIlJldHVybnMgdGhlIG1hdGNoaW5nIHJvdyIKICAgICAgICAgICAgZGFvIC0+IHNlcnZpY2UgIlJldHVybnMgT3B0aW9uYWw8U3Vic2NyaXB0aW9uPiIKICAgICAgICAgICAgc2VydmljZSAtPiBjb250cm9sbGVyICJSZXR1cm5zIFN1YnNjcmlwdGlvblJlc3BvbnNlIgogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBiYWNrZW5kICJVcGRhdGVTdWJzY3JpcHRpb24iICJGbG93IGZvciB1cGRhdGluZyBhbiBleGlzdGluZyBzdWJzY3JpcHRpb24iIHsKICAgICAgICAgICAgY29udHJvbGxlciAtPiBzZXJ2aWNlICJWYWxpZGF0ZXMgcmVxdWVzdCBhbmQgbWFwcyB0byBlbnRpdHkiCiAgICAgICAgICAgIHNlcnZpY2UgLT4gZGFvICJVcGRhdGVzIHRoZSBzdWJzY3JpcHRpb24iCiAgICAgICAgICAgIGRhbyAtPiBkYXRhYmFzZSAiVVBEQVRFIHN1YnNjcmlwdGlvbnMgU0VUIG5hbWUgPSA/LCBwcmljZSA9ID8gV0hFUkUgaWQgPSA/IgogICAgICAgICAgICBkYXRhYmFzZSAtPiBkYW8gIlJldHVybnMgcm93cyBhZmZlY3RlZCIKICAgICAgICAgICAgZGFvIC0+IHNlcnZpY2UgIlJldHVybnMgcm93cy11cGRhdGVkIGNvdW50IgogICAgICAgICAgICBzZXJ2aWNlIC0+IGNvbnRyb2xsZXIgIlJldHVybnMgU3Vic2NyaXB0aW9uUmVzcG9uc2UgYnVpbHQgZnJvbSB0aGUgcmVxdWVzdCIKICAgICAgICB9CgogICAgICAgIGR5bmFtaWMgYmFja2VuZCAiRGVsZXRlU3Vic2NyaXB0aW9uIiAiRmxvdyBmb3IgZGVsZXRpbmcgYSBzdWJzY3JpcHRpb24gYnkgaWQiIHsKICAgICAgICAgICAgY29udHJvbGxlciAtPiBzZXJ2aWNlICJSZXF1ZXN0cyBkZWxldGlvbiBieSBpZCIKICAgICAgICAgICAgc2VydmljZSAtPiBkYW8gIkRlbGV0ZXMgdGhlIHN1YnNjcmlwdGlvbiIKICAgICAgICAgICAgZGFvIC0+IGRhdGFiYXNlICJERUxFVEUgRlJPTSBzdWJzY3JpcHRpb25zIFdIRVJFIGlkID0gPyIKICAgICAgICAgICAgZGF0YWJhc2UgLT4gZGFvICJSZXR1cm5zIHJvd3MgYWZmZWN0ZWQiCiAgICAgICAgICAgIGRhbyAtPiBzZXJ2aWNlICJSZXR1cm5zIHJvd3MtZGVsZXRlZCBjb3VudCIKICAgICAgICAgICAgc2VydmljZSAtPiBjb250cm9sbGVyICJDb25maXJtcyBkZWxldGlvbiAoMjA0IE5vIENvbnRlbnQpIgogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBiYWNrZW5kICJDYWxjdWxhdGVUb3RhbCIgIkZsb3cgZm9yIGNhbGN1bGF0aW5nIHRvdGFsIG1vbnRobHkgc3BlbmRpbmciIHsKICAgICAgICAgICAgY29udHJvbGxlciAtPiBzZXJ2aWNlICJSZXF1ZXN0cyB0aGUgdG90YWwgbW9udGhseSBhbW91bnQiCiAgICAgICAgICAgIHNlcnZpY2UgLT4gZGFvICJSZXF1ZXN0cyB0aGUgc3VtIG9mIGFsbCBwcmljZXMiCiAgICAgICAgICAgIGRhbyAtPiBkYXRhYmFzZSAiU0VMRUNUIENPQUxFU0NFKFNVTShwcmljZSksIDApIEZST00gc3Vic2NyaXB0aW9ucyIKICAgICAgICAgICAgZGF0YWJhc2UgLT4gZGFvICJSZXR1cm5zIHRoZSBzdW1tZWQgdG90YWwiCiAgICAgICAgICAgIGRhbyAtPiBzZXJ2aWNlICJSZXR1cm5zIEJpZ0RlY2ltYWwiCiAgICAgICAgICAgIHNlcnZpY2UgLT4gY29udHJvbGxlciAiUmV0dXJucyBUb3RhbEFtb3VudFJlc3BvbnNlIgogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBiYWNrZW5kICJDb3VudFN1YnNjcmlwdGlvbnMiICJGbG93IGZvciBjb3VudGluZyBzdWJzY3JpcHRpb25zIiB7CiAgICAgICAgICAgIGNvbnRyb2xsZXIgLT4gc2VydmljZSAiUmVxdWVzdHMgdGhlIHN1YnNjcmlwdGlvbiBjb3VudCIKICAgICAgICAgICAgc2VydmljZSAtPiBkYW8gIlJlcXVlc3RzIHRoZSBudW1iZXIgb2Ygc3Vic2NyaXB0aW9ucyIKICAgICAgICAgICAgZGFvIC0+IGRhdGFiYXNlICJTRUxFQ1QgQ09VTlQoKikgRlJPTSBzdWJzY3JpcHRpb25zIgogICAgICAgICAgICBkYXRhYmFzZSAtPiBkYW8gIlJldHVybnMgdGhlIGNvdW50IgogICAgICAgICAgICBkYW8gLT4gc2VydmljZSAiUmV0dXJucyBsb25nIgogICAgICAgICAgICBzZXJ2aWNlIC0+IGNvbnRyb2xsZXIgIlJldHVybnMgU3Vic2NyaXB0aW9uQ291bnRSZXNwb25zZSIKICAgICAgICB9CgogICAgICAgIGR5bmFtaWMgYmFja2VuZCAiR2V0U3Vic2NyaXB0aW9uQnlJZE5vdEZvdW5kIiAiRXJyb3IgZmxvdzogcmVxdWVzdGVkIHN1YnNjcmlwdGlvbiBkb2VzIG5vdCBleGlzdCIgewogICAgICAgICAgICBjb250cm9sbGVyIC0+IHNlcnZpY2UgIlJlcXVlc3RzIHRoZSBzdWJzY3JpcHRpb24gYnkgaWQiCiAgICAgICAgICAgIHNlcnZpY2UgLT4gZGFvICJGZXRjaGVzIHRoZSBzdWJzY3JpcHRpb24gYnkgaWQiCiAgICAgICAgICAgIGRhbyAtPiBkYXRhYmFzZSAiU0VMRUNUIGlkLCBuYW1lLCBwcmljZSBGUk9NIHN1YnNjcmlwdGlvbnMgV0hFUkUgaWQgPSA/IgogICAgICAgICAgICBkYXRhYmFzZSAtPiBkYW8gIlJldHVybnMgbm8gcm93cyIKICAgICAgICAgICAgZGFvIC0+IHNlcnZpY2UgIlJldHVybnMgZW1wdHkgT3B0aW9uYWw8U3Vic2NyaXB0aW9uPiIKICAgICAgICAgICAgc2VydmljZSAtPiBjb250cm9sbGVyICJUaHJvd3MgU3Vic2NyaXB0aW9uTm90Rm91bmRFeGNlcHRpb247IHJlc3BvbmRzIDQwNCBOb3QgRm91bmQiCiAgICAgICAgfQoKICAgICAgICBkeW5hbWljIGJhY2tlbmQgIkNyZWF0ZVN1YnNjcmlwdGlvbkR1cGxpY2F0ZU5hbWUiICJFcnJvciBmbG93OiBzdWJzY3JpcHRpb24gbmFtZSBhbHJlYWR5IGV4aXN0cyIgewogICAgICAgICAgICBjb250cm9sbGVyIC0+IHNlcnZpY2UgIlZhbGlkYXRlcyByZXF1ZXN0IGFuZCBtYXBzIHRvIGVudGl0eSIKICAgICAgICAgICAgc2VydmljZSAtPiBkYW8gIlNhdmVzIHRoZSBzdWJzY3JpcHRpb24iCiAgICAgICAgICAgIGRhbyAtPiBkYXRhYmFzZSAiSU5TRVJUIElOVE8gc3Vic2NyaXB0aW9ucyAobmFtZSwgcHJpY2UpIFZBTFVFUyAoPywgPykgUkVUVVJOSU5HIGlkLCBuYW1lLCBwcmljZSIKICAgICAgICAgICAgZGF0YWJhc2UgLT4gZGFvICJSZWplY3RzIHRoZSBpbnNlcnQ6IGR1cGxpY2F0ZSBuYW1lIHZpb2xhdGVzIHRoZSB1bmlxdWUgaW5kZXgiCiAgICAgICAgICAgIGRhbyAtPiBzZXJ2aWNlICJUcmFuc2xhdGVzIHRoZSB2aW9sYXRpb24gYW5kIHRocm93cyBTdWJzY3JpcHRpb25BbHJlYWR5RXhpc3RzRXhjZXB0aW9uIgogICAgICAgICAgICBzZXJ2aWNlIC0+IGNvbnRyb2xsZXIgIlByb3BhZ2F0ZXMgdGhlIGV4Y2VwdGlvbjsgcmVzcG9uZHMgNDA5IENvbmZsaWN0IgogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBiYWNrZW5kICJDcmVhdGVTdWJzY3JpcHRpb25WYWxpZGF0aW9uRmFpbHVyZSIgIkVycm9yIGZsb3c6IHJlcXVlc3QgZmFpbHMgdmFsaWRhdGlvbiBhdCB0aGUgYm91bmRhcnkiIHsKICAgICAgICAgICAgZnJvbnRlbmQgLT4gY29udHJvbGxlciAiU3VibWl0cyBhIHN1YnNjcmlwdGlvbiB3aXRoIGludmFsaWQgZGF0YSIKICAgICAgICAgICAgY29udHJvbGxlciAtPiBmcm9udGVuZCAiUmVqZWN0cyB3aXRoIDQwMCBCYWQgUmVxdWVzdDsgdGhlIHJlcXVlc3QgbmV2ZXIgcmVhY2hlcyB0aGUgc2VydmljZSIKICAgICAgICB9CgogICAgICAgIHN0eWxlcyB7CiAgICAgICAgICAgIGVsZW1lbnQgIlBlcnNvbiIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjMDg0MjdiCiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgICAgICBzaGFwZSBQZXJzb24KICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzExNjhiZAogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZiAKICAgICAgICAgICAgfSAgICAKICAgICAgICAgICAgZWxlbWVudCAiQ29udGFpbmVyIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM0MzhkZDUKICAgICAgICAgICAgICAgIGNvbG9yICNmZmZmZmYKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJDb21wb25lbnQiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzg1YmJmMAogICAgICAgICAgICAgICAgY29sb3IgIzAwMDAwMAogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkRhdGFiYXNlIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBDeWxpbmRlcgogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQp9"
+  },
+  "views" : {
+    "componentViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "containerId" : "4",
+      "elements" : [ {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "Component",
+      "name" : "Component View: Subscription Tracker - Backend API",
+      "order" : 3,
+      "relationships" : [ {
+        "id" : "11"
+      }, {
+        "id" : "13"
+      }, {
+        "id" : "14"
+      }, {
+        "id" : "15"
+      } ]
+    } ],
+    "configuration" : {
+      "lastSavedView" : "GetSubscriptionById",
+      "metadataSymbols" : "SquareBrackets",
+      "styles" : {
+        "elements" : [ {
+          "background" : "#85bbf0",
+          "color" : "#000000",
+          "tag" : "Component"
+        }, {
+          "background" : "#438dd5",
+          "color" : "#ffffff",
+          "tag" : "Container"
+        }, {
+          "shape" : "Cylinder",
+          "tag" : "Database"
+        }, {
+          "background" : "#08427b",
+          "color" : "#ffffff",
+          "shape" : "Person",
+          "tag" : "Person"
+        }, {
+          "background" : "#1168bd",
+          "color" : "#ffffff",
+          "tag" : "Software System"
+        } ]
+      },
+      "terminology" : { }
+    },
+    "containerViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "key" : "Containers",
+      "name" : "Container View: Subscription Tracker",
+      "order" : 2,
+      "relationships" : [ {
+        "id" : "12"
+      }, {
+        "id" : "16"
+      }, {
+        "id" : "9"
+      } ],
+      "softwareSystemId" : "2"
+    } ],
+    "dynamicViews" : [ {
+      "description" : "Flow for creating a subscription",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CreateSubscription",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 4,
+      "relationships" : [ {
+        "description" : "Validates request and maps to entity",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 451
+        } ]
+      }, {
+        "description" : "Saves the subscription",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 458
+        } ]
+      }, {
+        "description" : "INSERT ... RETURNING id, name, price",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 469
+        }, {
+          "x" : 2550,
+          "y" : 469
+        } ]
+      }, {
+        "description" : "Returns saved row",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 321
+        }, {
+          "x" : 2380,
+          "y" : 321
+        } ]
+      }, {
+        "description" : "Returns Subscription",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 309
+        } ]
+      }, {
+        "description" : "Returns SubscriptionResponse",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 309
+        } ]
+      } ]
+    }, {
+      "description" : "Flow for fetching all subscriptions",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "GetAllSubscriptions",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 5,
+      "relationships" : [ {
+        "description" : "Requests all subscriptions",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 455
+        } ]
+      }, {
+        "description" : "Fetches all subscriptions",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 455
+        } ]
+      }, {
+        "description" : "SELECT id, name, price FROM subscriptions",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 466
+        }, {
+          "x" : 2550,
+          "y" : 466
+        } ]
+      }, {
+        "description" : "Returns rows",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 329
+        }, {
+          "x" : 2380,
+          "y" : 329
+        } ]
+      }, {
+        "description" : "Returns List<Subscription>",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 317
+        } ]
+      }, {
+        "description" : "Returns List<SubscriptionResponse>",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 324
+        } ]
+      } ]
+    }, {
+      "description" : "Flow for fetching a single subscription by id",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "GetSubscriptionById",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 6,
+      "relationships" : [ {
+        "description" : "Requests the subscription by id",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 459
+        } ]
+      }, {
+        "description" : "Fetches the subscription by id",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 459
+        } ]
+      }, {
+        "description" : "SELECT id, name, price FROM subscriptions WHERE id = ?",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 472
+        }, {
+          "x" : 2550,
+          "y" : 472
+        } ]
+      }, {
+        "description" : "Returns the matching row",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 314
+        }, {
+          "x" : 2380,
+          "y" : 314
+        } ]
+      }, {
+        "description" : "Returns Optional<Subscription>",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 309
+        } ]
+      }, {
+        "description" : "Returns SubscriptionResponse",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 302
+        } ]
+      } ]
+    }, {
+      "description" : "Flow for updating an existing subscription",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "UpdateSubscription",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 7,
+      "relationships" : [ {
+        "description" : "Validates request and maps to entity",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 466
+        } ]
+      }, {
+        "description" : "Updates the subscription",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 473
+        } ]
+      }, {
+        "description" : "UPDATE subscriptions SET name = ?, price = ? WHERE id = ?",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 477
+        }, {
+          "x" : 2550,
+          "y" : 477
+        } ]
+      }, {
+        "description" : "Returns rows affected",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 314
+        }, {
+          "x" : 2380,
+          "y" : 314
+        } ]
+      }, {
+        "description" : "Returns rows-updated count",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 309
+        } ]
+      }, {
+        "description" : "Returns SubscriptionResponse built from the request",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 316
+        } ]
+      } ]
+    }, {
+      "description" : "Flow for deleting a subscription by id",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "DeleteSubscription",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 8,
+      "relationships" : [ {
+        "description" : "Requests deletion by id",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 454
+        } ]
+      }, {
+        "description" : "Deletes the subscription",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 454
+        } ]
+      }, {
+        "description" : "DELETE FROM subscriptions WHERE id = ?",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 465
+        }, {
+          "x" : 2550,
+          "y" : 465
+        } ]
+      }, {
+        "description" : "Returns rows affected",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 321
+        }, {
+          "x" : 2380,
+          "y" : 321
+        } ]
+      }, {
+        "description" : "Returns rows-deleted count",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 316
+        } ]
+      }, {
+        "description" : "Confirms deletion (204 No Content)",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 316
+        } ]
+      } ]
+    }, {
+      "description" : "Flow for calculating total monthly spending",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CalculateTotal",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 9,
+      "relationships" : [ {
+        "description" : "Requests the total monthly amount",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 459
+        } ]
+      }, {
+        "description" : "Requests the sum of all prices",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 466
+        } ]
+      }, {
+        "description" : "SELECT COALESCE(SUM(price), 0) FROM subscriptions",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 479
+        }, {
+          "x" : 2550,
+          "y" : 479
+        } ]
+      }, {
+        "description" : "Returns the summed total",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 307
+        }, {
+          "x" : 2380,
+          "y" : 307
+        } ]
+      }, {
+        "description" : "Returns BigDecimal",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 295
+        } ]
+      }, {
+        "description" : "Returns TotalAmountResponse",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 295
+        } ]
+      } ]
+    }, {
+      "description" : "Flow for counting subscriptions",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CountSubscriptions",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 10,
+      "relationships" : [ {
+        "description" : "Requests the subscription count",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 454
+        } ]
+      }, {
+        "description" : "Requests the number of subscriptions",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 447
+        } ]
+      }, {
+        "description" : "SELECT COUNT(*) FROM subscriptions",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 465
+        }, {
+          "x" : 2550,
+          "y" : 465
+        } ]
+      }, {
+        "description" : "Returns the count",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 321
+        }, {
+          "x" : 2380,
+          "y" : 321
+        } ]
+      }, {
+        "description" : "Returns long",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 302
+        } ]
+      }, {
+        "description" : "Returns SubscriptionCountResponse",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 316
+        } ]
+      } ]
+    }, {
+      "description" : "Error flow: requested subscription does not exist",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "GetSubscriptionByIdNotFound",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 11,
+      "relationships" : [ {
+        "description" : "Requests the subscription by id",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 459
+        } ]
+      }, {
+        "description" : "Fetches the subscription by id",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 459
+        } ]
+      }, {
+        "description" : "SELECT id, name, price FROM subscriptions WHERE id = ?",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 472
+        }, {
+          "x" : 2550,
+          "y" : 472
+        } ]
+      }, {
+        "description" : "Returns no rows",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 314
+        }, {
+          "x" : 2380,
+          "y" : 314
+        } ]
+      }, {
+        "description" : "Returns empty Optional<Subscription>",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 309
+        } ]
+      }, {
+        "description" : "Throws SubscriptionNotFoundException; responds 404 Not Found",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 316
+        } ]
+      } ]
+    }, {
+      "description" : "Error flow: subscription name already exists",
+      "dimensions" : {
+        "height" : 1058,
+        "width" : 3420
+      },
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "5",
+        "x" : 300,
+        "y" : 243
+      }, {
+        "id" : "6",
+        "x" : 1090,
+        "y" : 243
+      }, {
+        "id" : "7",
+        "x" : 1880,
+        "y" : 243
+      }, {
+        "id" : "8",
+        "x" : 2720,
+        "y" : 243
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CreateSubscriptionDuplicateName",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 12,
+      "relationships" : [ {
+        "description" : "Validates request and maps to entity",
+        "id" : "13",
+        "order" : "1",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 480
+        } ]
+      }, {
+        "description" : "Saves the subscription",
+        "id" : "14",
+        "order" : "2",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 487
+        } ]
+      }, {
+        "description" : "INSERT INTO subscriptions (name, price) VALUES (?, ?) RETURNING id, name, price",
+        "id" : "15",
+        "order" : "3",
+        "response" : false,
+        "vertices" : [ {
+          "x" : 2380,
+          "y" : 501
+        }, {
+          "x" : 2550,
+          "y" : 501
+        } ]
+      }, {
+        "description" : "Rejects the insert: duplicate name violates the unique index",
+        "id" : "15",
+        "order" : "4",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 2550,
+          "y" : 285
+        }, {
+          "x" : 2380,
+          "y" : 285
+        } ]
+      }, {
+        "description" : "Translates the violation and throws SubscriptionAlreadyExistsException",
+        "id" : "14",
+        "order" : "5",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 1710,
+          "y" : 294
+        } ]
+      }, {
+        "description" : "Propagates the exception; responds 409 Conflict",
+        "id" : "13",
+        "order" : "6",
+        "response" : true,
+        "vertices" : [ {
+          "x" : 920,
+          "y" : 287
+        } ]
+      } ]
+    }, {
+      "description" : "Error flow: request fails validation at the boundary",
+      "elementId" : "4",
+      "elements" : [ {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CreateSubscriptionValidationFailure",
+      "name" : "Dynamic View: Subscription Tracker - Backend API",
+      "order" : 13,
+      "relationships" : [ {
+        "description" : "Submits a subscription with invalid data",
+        "id" : "11",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "Rejects with 400 Bad Request; the request never reaches the service",
+        "id" : "11",
+        "order" : "2",
+        "response" : true
+      } ]
+    } ],
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "key" : "SystemContext",
+      "name" : "System Context View: Subscription Tracker",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "10"
+      } ],
+      "softwareSystemId" : "2"
+    } ]
+  }
+}
