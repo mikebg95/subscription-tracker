@@ -15,11 +15,11 @@ calculating monthly spend. It is designed as three containers:
 | Backend API | Java / Spring Boot | Implemented |
 | Database | PostgreSQL | Implemented |
 
-![C4 System Context](c4/system-context-view.png)
+![C4 System Context](architecture/system-context-view.png)
 
 ## C4 model
 
-The architecture is written as code in [`c4/workspace.dsl`](c4/workspace.dsl) and rendered with
+The architecture is written as code in [`architecture/workspace.dsl`](architecture/workspace.dsl) and rendered with
 Structurizr.
 
 ### Static views
@@ -30,9 +30,9 @@ Structurizr.
 | Container | Frontend, Backend API, and Database, and how they interact |
 | Component | The Backend API's internals — Controller, Service, DAO |
 
-![C4 Container view](c4/container-view.png)
+![C4 Container view](architecture/container-view.png)
 
-![C4 Component view](c4/component-view-backend.png)
+![C4 Component view](architecture/component-view-backend.png)
 
 ### Dynamic views
 
@@ -48,12 +48,12 @@ Structurizr:
 Prerequisite: [Docker](https://www.docker.com/products/docker-desktop/).
 
 ```bash
-cd c4
+cd architecture
 docker run -it --rm -p 9090:8080 -v "$(pwd)":/usr/local/structurizr structurizr/structurizr local
 ```
 
 Open <http://localhost:9090> and switch between the views. Static PNG exports of the three core
-views are committed under `c4/` for quick reference without running Structurizr.
+views are committed under `architecture/` for quick reference without running Structurizr.
 
 ## Database schema
 
@@ -68,8 +68,8 @@ export PostgreSQL DDL or a PNG.
 ## Repository structure
 
 ```
-subscription-tracker-architecture/
-├── c4/
+docs/
+├── architecture/
 │   ├── workspace.dsl              # C4 model — source of truth
 │   ├── workspace.json             # Structurizr layout & state
 │   ├── system-context-view.png    # exported static views
