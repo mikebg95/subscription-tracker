@@ -53,15 +53,15 @@ The system is modelled with the [C4 model](https://c4model.com/), maintained as 
 
 **Container view** — where the backend sits in the wider system:
 
-![C4 Container view](../subscription-tracker-architecture/c4/container-view.png)
+![C4 Container view](../docs/architecture/container-view.png)
 
 **Component view** — the backend's internal structure:
 
-![C4 Component view](../subscription-tracker-architecture/c4/component-view-backend.png)
+![C4 Component view](../docs/architecture/component-view-backend.png)
 
 ### Database schema
 
-![Database schema](../subscription-tracker-architecture/database/db-diagram.png)
+![Database schema](../docs/database/db-diagram.png)
 
 A single `subscriptions` table: identity primary key, `name VARCHAR(100)`, `price NUMERIC(10,2)`,
 and a **case-insensitive** uniqueness rule on `name` (so `Netflix` and `netflix` collide).
@@ -73,9 +73,9 @@ request flow (create, read, update, delete, count, total, and the validation, du
 not-found error paths) — and the database schema are maintained as code in the sibling
 architecture module:
 
-- C4 model (Structurizr DSL): [`workspace.dsl`](../subscription-tracker-architecture/c4/workspace.dsl)
-- DB schema (DBML): [`schema.dbml`](../subscription-tracker-architecture/database/schema.dbml)
-- Rendering instructions and the full view catalogue: [architecture README](../subscription-tracker-architecture/README.md)
+- C4 model (Structurizr DSL): [`workspace.dsl`](../docs/architecture/workspace.dsl)
+- DB schema (DBML): [`schema.dbml`](../docs/database/schema.dbml)
+- Rendering instructions and the full view catalogue: [architecture README](../docs/README.md)
 
 ## API
 
@@ -197,5 +197,5 @@ subscription-tracker-backend/
 
 Part of the [`subscription-tracker`](https://github.com/mikebg95/subscription-tracker) monorepo:
 
-- **`subscription-tracker-architecture`** — C4 model and database schema, as code.
-- **`subscription-tracker-frontend`** — web client (separate module).
+- **[`docs/`](../docs)** — C4 model and database schema as code, plus the UI designs.
+- **`frontend/`** — Angular web client (planned).
