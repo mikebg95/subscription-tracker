@@ -183,6 +183,7 @@ class SubscriptionServiceTest {
             // Arrange
             SubscriptionRequest subscriptionRequest = new SubscriptionRequest("Netflix", new BigDecimal("8.99"));
             when(subscriptionDao.update(any(Subscription.class))).thenReturn(1);
+            when(subscriptionDao.findById(1L)).thenReturn(Optional.of(new Subscription(1L, "Netflix", new BigDecimal("8.99"))));
 
             // Act
             SubscriptionResponse subscriptionResponse = subscriptionService.updateSubscription(1L, subscriptionRequest);
