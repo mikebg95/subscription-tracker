@@ -4,6 +4,9 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}   # frontend dev server
+
 logging:
   level:
     dev.michaelgoldman.subscriptiontrackerbackend: DEBUG

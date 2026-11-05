@@ -12,7 +12,7 @@ calculating monthly spend. It is designed as three containers:
 
 | Container | Technology | Status |
 |---|---|---|
-| Frontend Web Application | Angular | Planned |
+| Frontend Web Application | Single-page application | Planned |
 | Backend API | Java / Spring Boot | Implemented |
 | Database | PostgreSQL | Implemented |
 
@@ -68,7 +68,7 @@ export PostgreSQL DDL or a PNG.
 
 ## UI designs
 
-The screens for the planned Angular frontend are in [`design/`](design): open
+The screens for the planned frontend are in [`design/`](design): open
 [`subscription-tracker-designs.html`](design/subscription-tracker-designs.html) in a browser for the
 full set, or browse the per-screen PNG exports (home list, empty state, add, edit and delete
 dialogs, error and not-found).

@@ -199,4 +199,4 @@ backend/
 Part of the [`subscription-tracker`](https://github.com/mikebg95/subscription-tracker) monorepo:
 
 - **[`docs/`](../docs)** — C4 model and database schema as code, plus the UI designs.
-- **`frontend/`** — Angular web client (planned).
+- **`frontend/`** — SPA web client (planned).

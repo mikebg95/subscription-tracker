@@ -56,7 +56,7 @@
           "technology" : "JSON/HTTPS"
         } ],
         "tags" : "Element,Container",
-        "technology" : "Angular"
+        "technology" : "Single-Page Application"
       }, {
         "components" : [ {
           "description" : "Exposes REST endpoints; handles HTTP requests, responses, and status codes.",

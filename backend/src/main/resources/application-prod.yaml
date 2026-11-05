@@ -7,6 +7,9 @@ spring:
   flyway:
     clean-disabled: true
 
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
+
 logging:
   level:
     root: INFO

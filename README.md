@@ -6,7 +6,7 @@ Built as a portfolio project with a deliberately simple domain, so the engineeri
 
 <p>
   <img alt="Backend" src="https://img.shields.io/badge/backend-Spring%20Boot%204.1-6DB33F">
-  <img alt="Frontend" src="https://img.shields.io/badge/frontend-Angular-DD0031">
+  <img alt="Frontend" src="https://img.shields.io/badge/frontend-SPA-lightgrey">
   <img alt="Database" src="https://img.shields.io/badge/database-PostgreSQL%2016-336791">
   <img alt="API" src="https://img.shields.io/badge/API-OpenAPI%203-6BA539">
 </p>
@@ -28,7 +28,7 @@ Project 1 of the **Spring Persistence & Architecture Series**: it covers the low
 | Component | Status |
 |---|---|
 | Backend API | Built and tested |
-| Frontend (Angular) | Designed — implementation planned |
+| Frontend (SPA) | Designed — implementation planned |
 | Deployment | Planned |
 
 ## Architecture
@@ -37,7 +37,7 @@ A single-page frontend talks to a stateless REST backend; the backend owns all p
 
 ```mermaid
 flowchart LR
-    user([User]) --> fe["Angular SPA<br/><i>(planned)</i>"]
+    user([User]) --> fe["SPA frontend<br/><i>(planned)</i>"]
     fe -->|"REST — /api/v1"| api["Spring Boot API"]
     api -->|"JDBC / JdbcTemplate"| db[("PostgreSQL")]
 ```
@@ -58,7 +58,7 @@ The full C4 model (system context, container, component and dynamic views) is in
 
 | Layer | Technology |
 |---|---|
-| Frontend | Angular · TypeScript *(planned)* |
+| Frontend | Single-page application *(planned)* |
 | Backend | Java 26 · Spring Boot 4.1 · Spring MVC · Bean Validation |
 | Persistence | Spring JDBC (`JdbcTemplate`) · PostgreSQL 16 · Flyway |
 | API | OpenAPI 3 (code-first, springdoc) |
@@ -70,7 +70,7 @@ The full C4 model (system context, container, component and dynamic views) is in
 | Path | Contents |
 |---|---|
 | [`backend/`](backend) | Spring Boot REST API — build, run and test instructions in its own [README](backend/README.md). |
-| `frontend/` | Angular single-page application *(planned)*. |
+| `frontend/` | Single-page application *(planned)*. |
 | [`docs/`](docs) | Architecture (C4), database schema (DBML) and UI designs. |
 
 ## Getting started

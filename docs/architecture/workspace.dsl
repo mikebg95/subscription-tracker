@@ -3,7 +3,7 @@ workspace "Subscription Tracker" "A personal finance tool to track recurring sub
         user = person "User" "An individual who tracks their recurring subscriptions and what they cost per month."
         
         subscriptionTracker = softwareSystem "Subscription Tracker" "Tracks recurring subscriptions and their monthly prices, and calculates the total monthly spending." {
-        frontend = container "Frontend Web Application" "Provides the user interface for viewing, adding, editing, and deleting subscriptions." "Angular"
+        frontend = container "Frontend Web Application" "Provides the user interface for viewing, adding, editing, and deleting subscriptions." "Single-Page Application"
         backend = container "Backend API" "Handles subscription CRUD operations, calculates spending totals, and exposes a RESTful API." "Java and Spring Boot" {
             controller = component "Subscription Controller" "Exposes REST endpoints; handles HTTP requests, responses, and status codes."
             service = component "Subscription Service" "Holds business logic; defines transaction boundaries, maps between DTOs and entities, and interprets DAO results."
