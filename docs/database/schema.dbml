@@ -2,6 +2,11 @@
 
 Table subscriptions {
   id bigint [primary key, increment]
-  name varchar(100) [unique, not null]
+  name varchar(100) [not null]
   price numeric(10,2) [not null]
+
+  indexes {
+    // case-insensitive: Netflix and netflix collide (V2 migration)
+    (`LOWER(name)`) [unique, name: 'ux_subscriptions_name_lower']
+  }
 }

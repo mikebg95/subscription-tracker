@@ -1,12 +1,12 @@
-workspace "Subscription Tracker" "A personal finance tool to track software subscriptions and calculate monthly spending." {
+workspace "Subscription Tracker" "A personal finance tool to track recurring subscriptions and calculate monthly spending." {
     model {
-        user = person "User" "An individual who tracks their recurring subscription costs and monitors upcoming renewal dates."
+        user = person "User" "An individual who tracks their recurring subscriptions and what they cost per month."
         
-        subscriptionTracker = softwareSystem "Subscription Tracker" "Tracks software subscriptions and their prices, and calculates total and monthly spending." {
+        subscriptionTracker = softwareSystem "Subscription Tracker" "Tracks recurring subscriptions and their monthly prices, and calculates the total monthly spending." {
         frontend = container "Frontend Web Application" "Provides the user interface for viewing, adding, editing, and deleting subscriptions." "Angular"
         backend = container "Backend API" "Handles subscription CRUD operations, calculates spending totals, and exposes a RESTful API." "Java and Spring Boot" {
             controller = component "Subscription Controller" "Exposes REST endpoints; handles HTTP requests, responses, and status codes."
-            service = component "Subscription Service" "Holds business logic; validates input, maps between DTOs and entities, and interprets DAO results."
+            service = component "Subscription Service" "Holds business logic; defines transaction boundaries, maps between DTOs and entities, and interprets DAO results."
             dao = component "Subscription DAO" "Executes hand-written SQL against the database using Spring JdbcTemplate."
         }
         database = container "Database" "Stores subscription records (name, price)." "PostgreSQL" "Database"

@@ -71,11 +71,11 @@ and a **case-insensitive** uniqueness rule on `name` (so `Netflix` and `netflix`
 The full C4 model — System Context, Container and Component views, plus dynamic views for every
 request flow (create, read, update, delete, count, total, and the validation, duplicate-name, and
 not-found error paths) — and the database schema are maintained as code in the sibling
-architecture module:
+`docs/` module:
 
 - C4 model (Structurizr DSL): [`workspace.dsl`](../docs/architecture/workspace.dsl)
 - DB schema (DBML): [`schema.dbml`](../docs/database/schema.dbml)
-- Rendering instructions and the full view catalogue: [architecture README](../docs/README.md)
+- Rendering instructions and the full view catalogue: [docs README](../docs/README.md)
 
 ## API
 
@@ -94,7 +94,8 @@ Errors are returned as [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc
 | `GET` | `/api/v1/subscriptions/total` | `200 OK` | — |
 
 Interactive docs (Swagger UI) are served at `/swagger-ui.html` when the app is running with
-docs enabled (default in `dev`).
+docs enabled — on by default in every profile except `test`; set `SPRINGDOC_ENABLED=false` to switch
+them off.
 
 ## Engineering highlights
 
@@ -122,8 +123,8 @@ progressively more realistic (and slower) tests toward the top.
 
 | Level | Scope | Tooling |
 |---|---|---|
-| **Unit** | Service logic in isolation | JUnit 5, Mockito, AssertJ, `ArgumentCaptor`, parameterized tests |
-| **Web slice** | Controller + validation + error mapping, no DB | `@WebMvcTest`, `MockMvc`, `@MockitoBean`, JSON-path assertions |
+| **Unit** | Service logic in isolation | JUnit 5, Mockito, AssertJ, `ArgumentCaptor` |
+| **Web slice** | Controller + validation + error mapping, no DB | `@WebMvcTest`, `MockMvc`, `@MockitoBean`, JSON-path assertions, parameterized tests |
 | **Persistence slice** | DAO against a **real** database | `@SpringBootTest` + Testcontainers, `@Transactional` rollback per test |
 | **End-to-end** | Full HTTP → DB → HTTP lifecycle | `RANDOM_PORT`, `RestTestClient`, real Postgres |
 
@@ -178,7 +179,7 @@ The merged JaCoCo report is written to `target/site/jacoco/index.html`.
 ## Project layout
 
 ```
-subscription-tracker-backend/
+backend/
 ├── src/main/java/.../
 │   ├── controller/   # REST endpoints
 │   ├── service/      # business logic, transactions

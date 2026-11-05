@@ -50,9 +50,9 @@ The full C4 model (system context, container, component and dynamic views) is in
 
 - **Hand-written data access** — a DAO interface with a `JdbcTemplate` implementation and parameterized SQL; no JPA, no Spring Data.
 - **Flyway migrations** — the schema is versioned; `V2` evolves it from a plain unique constraint to a case-insensitive unique index.
-- **Code-first OpenAPI** — the API is documented from the code with springdoc, with Swagger UI in the `dev` profile.
+- **Code-first OpenAPI** — the API is documented from the code with springdoc, with Swagger UI enabled by default (switch it off with `SPRINGDOC_ENABLED=false`).
 - **RFC 9457 error handling** — one `@RestControllerAdvice` returns `application/problem+json` for validation errors (400), not-found (404) and duplicates (409), without leaking internals.
-- **Test-first** — 63 hand-written tests: unit, web slice (`@WebMvcTest`), DAO integration and end-to-end tests against a real PostgreSQL via Testcontainers.
+- **Test-first** — 86 hand-written tests: unit, web slice (`@WebMvcTest`), DAO integration and end-to-end tests against a real PostgreSQL via Testcontainers.
 
 ## Tech stack
 
@@ -82,4 +82,4 @@ The backend runs on its own today. See [`backend/README.md`](backend/README.md) 
 - **Architecture (C4)** — [`docs/architecture`](docs/architecture)
 - **Database schema** — [`docs/database`](docs/database)
 - **UI designs** — [`docs/design`](docs/design)
-- **API** — Swagger UI at `/swagger-ui.html` when running in the `dev` profile
+- **API** — Swagger UI at `/swagger-ui.html` while the backend is running

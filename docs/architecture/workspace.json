@@ -1,6 +1,6 @@
 {
   "configuration" : { },
-  "description" : "A personal finance tool to track software subscriptions and calculate monthly spending.",
+  "description" : "A personal finance tool to track recurring subscriptions and calculate monthly spending.",
   "documentation" : { },
   "id" : 1,
   "lastModifiedAgent" : "structurizr/diagrams/ece552b1-5bda-4dce-87da-93c37ef8a572",
@@ -8,7 +8,7 @@
   "lastModifiedUser" : "943909565",
   "model" : {
     "people" : [ {
-      "description" : "An individual who tracks their recurring subscription costs and monitors upcoming renewal dates.",
+      "description" : "An individual who tracks their recurring subscriptions and what they cost per month.",
       "id" : "1",
       "name" : "User",
       "properties" : {
@@ -75,7 +75,7 @@
           } ],
           "tags" : "Element,Component"
         }, {
-          "description" : "Holds business logic; validates input, maps between DTOs and entities, and interprets DAO results.",
+          "description" : "Holds business logic; defines transaction boundaries, maps between DTOs and entities, and interprets DAO results.",
           "documentation" : { },
           "id" : "6",
           "name" : "Subscription Service",
@@ -136,7 +136,7 @@
         "tags" : "Element,Container,Database",
         "technology" : "PostgreSQL"
       } ],
-      "description" : "Tracks software subscriptions and their prices, and calculates total and monthly spending.",
+      "description" : "Tracks recurring subscriptions and their monthly prices, and calculates the total monthly spending.",
       "documentation" : { },
       "id" : "2",
       "name" : "Subscription Tracker",

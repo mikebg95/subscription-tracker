@@ -1,12 +1,13 @@
-# Subscription Tracker — Architecture
+# Subscription Tracker — Docs
 
 Architecture-as-code for the Subscription Tracker system: the **C4 model** (via the
 **Structurizr DSL**) and the **database schema** (via **DBML**). Both are the source of truth for
-the system's design, versioned alongside the code they describe.
+the system's design, versioned alongside the code they describe. The **UI designs** for the
+planned frontend live here too.
 
 ## System overview
 
-Subscription Tracker is a personal-finance tool for tracking recurring software subscriptions and
+Subscription Tracker is a personal-finance tool for tracking recurring subscriptions and
 calculating monthly spend. It is designed as three containers:
 
 | Container | Technology | Status |
@@ -65,6 +66,15 @@ with a rendered diagram at [`database/db-diagram.png`](database/db-diagram.png).
 To edit, paste `schema.dbml` into [dbdiagram.io](https://dbdiagram.io); it renders live and can
 export PostgreSQL DDL or a PNG.
 
+## UI designs
+
+The screens for the planned Angular frontend are in [`design/`](design): open
+[`subscription-tracker-designs.html`](design/subscription-tracker-designs.html) in a browser for the
+full set, or browse the per-screen PNG exports (home list, empty state, add, edit and delete
+dialogs, error and not-found).
+
+![UI designs](design/subscription-tracker-designs-light.png)
+
 ## Repository structure
 
 ```
@@ -75,9 +85,13 @@ docs/
 │   ├── system-context-view.png    # exported static views
 │   ├── container-view.png
 │   └── component-view-backend.png
-└── database/
-    ├── schema.dbml                # DB schema — source of truth
-    └── db-diagram.png             # rendered schema diagram
+├── database/
+│   ├── schema.dbml                # DB schema — source of truth
+│   └── db-diagram.png             # rendered schema diagram
+└── design/
+    ├── subscription-tracker-designs.html   # UI designs — all screens
+    ├── subscription-tracker-designs-*.png  # light & dark overviews
+    └── st-screen-*.png                     # per-screen exports
 ```
 
 Part of the [`subscription-tracker`](https://github.com/mikebg95/subscription-tracker) monorepo,
