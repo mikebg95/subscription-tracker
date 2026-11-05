@@ -7,7 +7,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       // forward api calls to the backend, so no CORS is needed in dev
-      '/api': 'http://localhost:8080',
+      '/api': { target: 'http://localhost:8080', changeOrigin: false },
     },
   },
 })
