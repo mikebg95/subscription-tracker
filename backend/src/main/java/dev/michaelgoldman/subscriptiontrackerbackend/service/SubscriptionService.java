@@ -60,7 +60,9 @@ public class SubscriptionService {
         }
         log.info("Updated subscription id={} name={}", id, subscriptionRequest.name());
 
-        return SubscriptionResponse.fromEntity(subscriptionToUpdate);
+        return subscriptionDao.findById(id)
+                .map(SubscriptionResponse::fromEntity)
+                .orElseThrow(() -> new SubscriptionNotFoundException(id));
     }
 
     public long countSubscriptions() {

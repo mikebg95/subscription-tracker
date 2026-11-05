@@ -23,6 +23,10 @@ public record SubscriptionRequest(
         @Schema(description = "Recurring monthly price. Required, positive, up to 8 integer digits and 2 decimal places.")
         BigDecimal price) {
 
+    public SubscriptionRequest {
+        name = name == null ? null : name.strip();
+    }
+
     public Subscription toEntity() {
         return new Subscription(this.name, this.price);
     }
