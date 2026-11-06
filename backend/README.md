@@ -5,7 +5,7 @@ production-grade engineering standard. The domain is intentionally simple so tha
 engineering — data access, testing, error handling, migrations, API contract, and
 configuration — stays in full view.
 
-![Java](https://img.shields.io/badge/Java-26-orange?logo=openjdk&logoColor=white)
+![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-6DB33F?logo=springboot&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?logo=apachemaven&logoColor=white)
@@ -28,7 +28,7 @@ The value of the project is not the features; it's how it's built.
 
 | Layer | Choice |
 |---|---|
-| Language / runtime | Java 26 |
+| Language / runtime | Java 25 |
 | Framework | Spring Boot 4.1 (Spring MVC) |
 | Data access | Spring JDBC — `JdbcTemplate` + hand-written `RowMapper` (no JPA / no Spring Data) |
 | Database | PostgreSQL 16 |
@@ -143,7 +143,7 @@ Practices worth noting:
 
 ### Prerequisites
 
-- JDK 26
+- JDK 25
 - Docker (for Testcontainers-backed tests and the zero-setup local run)
 
 ### Run the app locally (zero database setup)

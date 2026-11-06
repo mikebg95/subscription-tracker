@@ -59,7 +59,7 @@ The full C4 model (system context, container, component and dynamic views) is in
 | Layer | Technology |
 |---|---|
 | Frontend | Single-page application *(planned)* |
-| Backend | Java 26 · Spring Boot 4.1 · Spring MVC · Bean Validation |
+| Backend | Java 25 · Spring Boot 4.1 · Spring MVC · Bean Validation |
 | Persistence | Spring JDBC (`JdbcTemplate`) · PostgreSQL 16 · Flyway |
 | API | OpenAPI 3 (code-first, springdoc) |
 | Testing | JUnit 5 · Mockito · AssertJ · Testcontainers · JaCoCo |
